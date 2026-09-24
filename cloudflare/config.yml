@@ -1,0 +1,18 @@
+# ==============================================================================
+# Cloudflare Tunnel Configuration
+# ==============================================================================
+
+# Ingress Rules
+# To bind a named tunnel, configure 'tunnel' and 'credentials-file' or run with CLI flags.
+ingress:
+  # Route local Next.js instance
+  - service: http://localhost:3000
+    originRequest:
+      connectTimeout: 30s
+      noTLSVerify: false
+      httpHostHeader: localhost:3000
+      keepAliveTimeout: 90s
+      keepAliveConnections: 100
+
+  # Catch-all
+  - service: http_status:404

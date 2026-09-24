@@ -1,0 +1,834 @@
+{
+  "skills": [
+    {
+      "id": "SKILL-GEN0101-001",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U1-T01",
+      "name": "Apply standard order of operations to evaluate real number expressions"
+    },
+    {
+      "id": "SKILL-GEN0101-002",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U1-T01",
+      "name": "Find prime factorizations and greatest common divisors"
+    },
+    {
+      "id": "SKILL-GEN0101-003",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U1-T02",
+      "name": "Perform arithmetic and algebraic operations on rational fractions"
+    },
+    {
+      "id": "SKILL-GEN0101-004",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U1-T03",
+      "name": "Solve direct, inverse, and joint variation engineering models"
+    },
+    {
+      "id": "SKILL-GEN0101-005",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U1-T04",
+      "name": "Factor algebraic polynomials and transpose physical formulas"
+    },
+    {
+      "id": "SKILL-GEN0101-006",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U1-T05",
+      "name": "Apply index and exponent laws to simplify algebraic expressions"
+    },
+    {
+      "id": "SKILL-GEN0101-007",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U1-T06",
+      "name": "Formulate and solve algebraic applied word problems (Rate, Mixture, Work, Age)"
+    },
+    {
+      "id": "SKILL-GEN0101-008",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U2-T07",
+      "name": "Solve quadratic and polynomial equations using factoring and quadratic formula"
+    },
+    {
+      "id": "SKILL-GEN0101-009",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U2-T08",
+      "name": "Solve 2x2 and 3x3 linear and non-linear systems of equations"
+    },
+    {
+      "id": "SKILL-GEN0101-010",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U2-T09",
+      "name": "Analyze function domain, range, composition, and inverse functions"
+    },
+    {
+      "id": "SKILL-GEN0101-011",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U2-T10",
+      "name": "Solve exponential and logarithmic algebraic equations"
+    },
+    {
+      "id": "SKILL-GEN0101-012",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U3-T11",
+      "name": "Calculate coordinate distance, midpoint, and slope in the Cartesian plane"
+    },
+    {
+      "id": "SKILL-GEN0101-017",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U3-T12",
+      "name": "Formulate equations of straight lines and determine parallel and perpendicular relationships"
+    },
+    {
+      "id": "SKILL-GEN0101-013",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U3-T13",
+      "name": "Solve right-angled triangles using trigonometric ratios and Pythagorean theorem"
+    },
+    {
+      "id": "SKILL-GEN0101-014",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U3-T14",
+      "name": "Solve engineering trigonometric problems involving bearings and elevation angles"
+    },
+    {
+      "id": "SKILL-GEN0101-015",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U3-T15",
+      "name": "Solve oblique triangles using the Law of Sines and Law of Cosines"
+    },
+    {
+      "id": "SKILL-GEN0101-016",
+      "courseId": "COURSE-GEN0101",
+      "topicId": "CURR-GEN0101-U3-T16",
+      "name": "Calculate areas and volumes of composite geometric figures and solids"
+    },
+    {
+      "id": "SKILL-GEN0102-001",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U1-T03",
+      "name": "Evaluate function limits using algebraic factoring, rationalization, and standard forms"
+    },
+    {
+      "id": "SKILL-GEN0102-002",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U1-T04",
+      "name": "Apply the Power Rule to differentiate polynomial, radical, and rational power functions"
+    },
+    {
+      "id": "SKILL-GEN0102-003",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U1-T04",
+      "name": "Apply the Product Rule to differentiate products of algebraic and transcendental functions"
+    },
+    {
+      "id": "SKILL-GEN0102-004",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U1-T04",
+      "name": "Apply the Quotient Rule to differentiate rational and fractional functions"
+    },
+    {
+      "id": "SKILL-GEN0102-005",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U1-T04",
+      "name": "Apply the Chain Rule to differentiate composite functions"
+    },
+    {
+      "id": "SKILL-GEN0102-006",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U2-T05",
+      "name": "Differentiate inverse trigonometric functions"
+    },
+    {
+      "id": "SKILL-GEN0102-007",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U2-T06",
+      "name": "Differentiate hyperbolic and inverse hyperbolic functions"
+    },
+    {
+      "id": "SKILL-GEN0102-008",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U2-T07",
+      "name": "Differentiate logarithmic and exponential functions and apply logarithmic differentiation"
+    },
+    {
+      "id": "SKILL-GEN0102-009",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U2-T08",
+      "name": "Perform implicit differentiation on bivariate equations F(x, y) = 0"
+    },
+    {
+      "id": "SKILL-GEN0102-010",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U2-T09",
+      "name": "Compute first-order partial derivatives for multivariable functions"
+    },
+    {
+      "id": "SKILL-GEN0102-011",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U2-T10",
+      "name": "Compute higher-order derivatives and evaluate physical acceleration"
+    },
+    {
+      "id": "SKILL-GEN0102-012",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U3-T11",
+      "name": "Determine slopes and equations of tangent and normal lines to curves"
+    },
+    {
+      "id": "SKILL-GEN0102-013",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U3-T12",
+      "name": "Perform polynomial curve analysis (Critical points, intervals of increase/decrease, concavity, and inflection points)"
+    },
+    {
+      "id": "SKILL-GEN0102-014",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U3-T13",
+      "name": "Formulate and solve engineering optimization problems (Maxima and Minima)"
+    },
+    {
+      "id": "SKILL-GEN0102-015",
+      "courseId": "COURSE-GEN0102",
+      "topicId": "CURR-GEN0102-U3-T13",
+      "name": "Formulate and solve geometric and physical related rates problems"
+    },
+    {
+      "id": "SKILL-GEN0107-001",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U1-T01",
+      "name": "Classify differential equations by type, order, degree, and linearity"
+    },
+    {
+      "id": "SKILL-GEN0107-002",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U1-T02",
+      "name": "Formulate differential equations by eliminating arbitrary constants"
+    },
+    {
+      "id": "SKILL-GEN0107-003",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U1-T03",
+      "name": "Solve first-order ODEs using separation of variables"
+    },
+    {
+      "id": "SKILL-GEN0107-004",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U2-T04",
+      "name": "Solve homogeneous first-order differential equations using substitution y = vx"
+    },
+    {
+      "id": "SKILL-GEN0107-005",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U2-T05",
+      "name": "Solve exact first-order differential equations and determine integrating factors"
+    },
+    {
+      "id": "SKILL-GEN0107-006",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U2-T06",
+      "name": "Solve first-order linear differential equations using integrating factors"
+    },
+    {
+      "id": "SKILL-GEN0107-007",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U2-T07",
+      "name": "Solve Bernoulli differential equations using linearizing substitution"
+    },
+    {
+      "id": "SKILL-GEN0107-008",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U2-T08",
+      "name": "Model engineering physical systems using first-order differential equations (Growth, Cooling, Mixtures)"
+    },
+    {
+      "id": "SKILL-GEN0107-009",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U3-T09",
+      "name": "Solve linear initial value problems using the Laplace transform"
+    },
+    {
+      "id": "SKILL-GEN0107-010",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U3-T10",
+      "name": "Solve simultaneous coupled linear differential systems using Laplace transforms"
+    },
+    {
+      "id": "SKILL-GEN0107-011",
+      "courseId": "COURSE-GEN0107",
+      "topicId": "CURR-GEN0107-U3-T11",
+      "name": "Compute inverse Laplace transforms using partial fraction decomposition and shifting theorems"
+    },
+    {
+      "id": "SKILL-GEN0110-001",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U1-T01",
+      "name": "Calculate hydrostatic pressure, buoyant force, and fluid discharge rate"
+    },
+    {
+      "id": "SKILL-GEN0110-002",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U1-T02",
+      "name": "Calculate thermal heat conduction, convection, and radiation energy transfer rates"
+    },
+    {
+      "id": "SKILL-GEN0110-003",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U1-T03",
+      "name": "Perform calorimetry energy balance calculations for phase changes and thermal equilibrium"
+    },
+    {
+      "id": "SKILL-GEN0110-004",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U1-T04",
+      "name": "Calculate linear, area, and volumetric thermal expansion and thermal stress in constrained members"
+    },
+    {
+      "id": "SKILL-GEN0110-005",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U2-T05",
+      "name": "Calculate acoustic intensity, decibel sound levels, and Doppler frequency shifts"
+    },
+    {
+      "id": "SKILL-GEN0110-006",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U2-T06",
+      "name": "Analyze wave speed, wavelength, frequency, and standing wave harmonics on strings"
+    },
+    {
+      "id": "SKILL-GEN0110-007",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U2-T07",
+      "name": "Apply Coulomb's Law and Gauss's Law to compute electric fields and potentials"
+    },
+    {
+      "id": "SKILL-GEN0110-008",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U3-T08",
+      "name": "Analyze DC circuits using Ohm's Law, Kirchhoff's Laws, and equivalent resistance"
+    },
+    {
+      "id": "SKILL-GEN0110-009",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U3-T09",
+      "name": "Apply Snell's Law and the thin lens / mirror equation to calculate image positions and magnifications"
+    },
+    {
+      "id": "SKILL-GEN0110-010",
+      "courseId": "COURSE-GEN0110",
+      "topicId": "CURR-GEN0110-U3-T10",
+      "name": "Calculate relativistic time dilation, length contraction, and mass-energy equivalence"
+    },
+    {
+      "id": "SKILL-GEN0161-001",
+      "courseId": "COURSE-GEN0161",
+      "topicId": "CURR-GEN0161-U1-T02",
+      "name": "Identify thermodynamic system boundaries, states, properties, and equilibrium conditions"
+    },
+    {
+      "id": "SKILL-GEN0161-002",
+      "courseId": "COURSE-GEN0161",
+      "topicId": "CURR-GEN0161-U1-T03",
+      "name": "Apply the First Law of Thermodynamics to closed-system non-flow energy balances"
+    },
+    {
+      "id": "SKILL-GEN0161-003",
+      "courseId": "COURSE-GEN0161",
+      "topicId": "CURR-GEN0161-U2-T04",
+      "name": "Apply the ideal gas equation of state and specific heat relations"
+    },
+    {
+      "id": "SKILL-GEN0161-004",
+      "courseId": "COURSE-GEN0161",
+      "topicId": "CURR-GEN0161-U2-T05",
+      "name": "Calculate boundary work, heat transfer, and property changes for standard ideal gas processes"
+    },
+    {
+      "id": "SKILL-GEN0161-005",
+      "courseId": "COURSE-GEN0161",
+      "topicId": "CURR-GEN0161-U2-T06",
+      "name": "Evaluate thermodynamic properties of pure substances using steam tables and phase diagrams"
+    },
+    {
+      "id": "SKILL-GEN0161-006",
+      "courseId": "COURSE-GEN0161",
+      "topicId": "CURR-GEN0161-U3-T07",
+      "name": "Calculate thermal efficiency, coefficient of performance, and entropy changes using the Second Law"
+    },
+    {
+      "id": "SKILL-GEN0161-007",
+      "courseId": "COURSE-GEN0161",
+      "topicId": "CURR-GEN0161-U3-T08",
+      "name": "Analyze the Ideal Rankine vapor power cycle and compute thermal efficiency"
+    },
+    {
+      "id": "SKILL-GEN0161-008",
+      "courseId": "COURSE-GEN0161",
+      "topicId": "CURR-GEN0161-U3-T08",
+      "name": "Analyze reheat and regenerative modifications to vapor power cycles"
+    },
+    {
+      "id": "SKILL-BSIE3219-001",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U1-T01",
+      "name": "Perform matrix operations, determinants, and matrix inverses for engineering systems"
+    },
+    {
+      "id": "SKILL-BSIE3219-002",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U1-T02",
+      "name": "Perform operations on complex numbers and vector algebra"
+    },
+    {
+      "id": "SKILL-BSIE3219-003",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U1-T03",
+      "name": "Solve combinatorics, permutations, combinations, and progression series problems"
+    },
+    {
+      "id": "SKILL-BSIE3219-004",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U2-T05",
+      "name": "Analyze conic sections equations (Circles, Parabolas, Ellipses, Hyperbolas)"
+    },
+    {
+      "id": "SKILL-BSIE3219-005",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U3-T07",
+      "name": "Apply definite integration to compute plane areas and volumes of revolution (Disk and Ring methods)"
+    },
+    {
+      "id": "SKILL-BSIE3219-006",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U3-T07",
+      "name": "Calculate simple interest, compound interest, nominal and effective interest rates"
+    },
+    {
+      "id": "SKILL-BSIE3219-007",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U3-T08",
+      "name": "Evaluate ordinary annuities, uniform gradient cash flows, and breakeven production points"
+    },
+    {
+      "id": "SKILL-BSIE3219-008",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U3-T08",
+      "name": "Calculate asset depreciation schedules using Straight Line, Sinking Fund, Declining Balance, and Sum-of-the-Years-Digits methods"
+    },
+    {
+      "id": "SKILL-BSIE3219-009",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U3-T09",
+      "name": "Perform project economic evaluations using Capital Recovery, Capitalized Cost, and Benefit-to-Cost ratios"
+    },
+    {
+      "id": "SKILL-BSIE3219-010",
+      "courseId": "COURSE-BSIE3219",
+      "topicId": "CURR-BSIE3219-U3-T09",
+      "name": "Analyze statics equilibrium, friction, and kinematics motion (Rectilinear, Projectile, Circular)"
+    }
+  ],
+  "topics": [
+    {
+      "id": "CURR-GEN0101-U1-T01",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U1",
+      "name": "Operations on Numbers"
+    },
+    {
+      "id": "CURR-GEN0101-U1-T02",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U1",
+      "name": "Fractions and Decimal Fractions"
+    },
+    {
+      "id": "CURR-GEN0101-U1-T03",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U1",
+      "name": "Percentage, Ratio, and Proportion"
+    },
+    {
+      "id": "CURR-GEN0101-U1-T04",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U1",
+      "name": "Basic Algebra: Fundamentals"
+    },
+    {
+      "id": "CURR-GEN0101-U1-T05",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U1",
+      "name": "Basic Algebra: Laws of Exponents"
+    },
+    {
+      "id": "CURR-GEN0101-U1-T06",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U1",
+      "name": "Applied Word Problems"
+    },
+    {
+      "id": "CURR-GEN0101-U2-T07",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U2",
+      "name": "Polynomial Equations and Inequalities"
+    },
+    {
+      "id": "CURR-GEN0101-U2-T08",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U2",
+      "name": "Linear and Non-Linear Systems"
+    },
+    {
+      "id": "CURR-GEN0101-U2-T09",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U2",
+      "name": "Functions and Mathematical Models"
+    },
+    {
+      "id": "CURR-GEN0101-U2-T10",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U2",
+      "name": "Logarithmic and Exponential Functions and Applications"
+    },
+    {
+      "id": "CURR-GEN0101-U3-T11",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U3",
+      "name": "Rectangular Coordinates"
+    },
+    {
+      "id": "CURR-GEN0101-U3-T12",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U3",
+      "name": "Equation of a Line"
+    },
+    {
+      "id": "CURR-GEN0101-U3-T13",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U3",
+      "name": "Right-Triangle Principles"
+    },
+    {
+      "id": "CURR-GEN0101-U3-T14",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U3",
+      "name": "Engineering Trigonometry"
+    },
+    {
+      "id": "CURR-GEN0101-U3-T15",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U3",
+      "name": "Solution of Oblique Triangles"
+    },
+    {
+      "id": "CURR-GEN0101-U3-T16",
+      "courseId": "COURSE-GEN0101",
+      "unitId": "UNIT-GEN0101-U3",
+      "name": "Plane Areas of Solid Mensuration"
+    },
+    {
+      "id": "CURR-GEN0102-U1-T01",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U1",
+      "name": "1. Introduction to Calculus"
+    },
+    {
+      "id": "CURR-GEN0102-U1-T02",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U1",
+      "name": "2. Limits & Continuity Concepts"
+    },
+    {
+      "id": "CURR-GEN0102-U1-T03",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U1",
+      "name": "3. Evaluating Limits"
+    },
+    {
+      "id": "CURR-GEN0102-U1-T04",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U1",
+      "name": "4. Analysis of Calculus Methods"
+    },
+    {
+      "id": "CURR-GEN0102-U2-T05",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U2",
+      "name": "5. Derivatives of Inverse Trigonometric Functions"
+    },
+    {
+      "id": "CURR-GEN0102-U2-T06",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U2",
+      "name": "6. Derivatives of Hyperbolic Functions"
+    },
+    {
+      "id": "CURR-GEN0102-U2-T07",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U2",
+      "name": "7. Derivatives of Logarithmic and Exponential Functions"
+    },
+    {
+      "id": "CURR-GEN0102-U2-T08",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U2",
+      "name": "8. Implicit Differentiation"
+    },
+    {
+      "id": "CURR-GEN0102-U2-T09",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U2",
+      "name": "9. Partial Differentiation"
+    },
+    {
+      "id": "CURR-GEN0102-U2-T10",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U2",
+      "name": "10. Higher order derivatives"
+    },
+    {
+      "id": "CURR-GEN0102-U3-T11",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U3",
+      "name": "11. The slope"
+    },
+    {
+      "id": "CURR-GEN0102-U3-T12",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U3",
+      "name": "12. Polynomial curves"
+    },
+    {
+      "id": "CURR-GEN0102-U3-T13",
+      "courseId": "COURSE-GEN0102",
+      "unitId": "UNIT-GEN0102-U3",
+      "name": "13. Applications of the Derivative(Maxima, minima, related rates)"
+    },
+    {
+      "id": "CURR-GEN0107-U1-T01",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U1",
+      "name": "Classification of Differential Equations"
+    },
+    {
+      "id": "CURR-GEN0107-U1-T02",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U1",
+      "name": "Elimination of Arbitrary Constant"
+    },
+    {
+      "id": "CURR-GEN0107-U1-T03",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U1",
+      "name": "Variable Separable"
+    },
+    {
+      "id": "CURR-GEN0107-U2-T04",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U2",
+      "name": "Homogeneous Linear Differential Equation with and without Constant Coefficients"
+    },
+    {
+      "id": "CURR-GEN0107-U2-T05",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U2",
+      "name": "Exact Differential Equation of Order one"
+    },
+    {
+      "id": "CURR-GEN0107-U2-T06",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U2",
+      "name": "Linear Differential Equation of Order one"
+    },
+    {
+      "id": "CURR-GEN0107-U2-T07",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U2",
+      "name": "Bernoulli Differential Equation of Order one"
+    },
+    {
+      "id": "CURR-GEN0107-U2-T08",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U2",
+      "name": "Application of 1st Order Differential Equations"
+    },
+    {
+      "id": "CURR-GEN0107-U3-T09",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U3",
+      "name": "Solution of Systems of Linear Differential Equation with Initial Values (Laplace Transform Method)"
+    },
+    {
+      "id": "CURR-GEN0107-U3-T10",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U3",
+      "name": "Simultaneous Solution to DE (Laplace Transform Method)"
+    },
+    {
+      "id": "CURR-GEN0107-U3-T11",
+      "courseId": "COURSE-GEN0107",
+      "unitId": "UNIT-GEN0107-U3",
+      "name": "Inverse Laplace Transforms of Functions"
+    },
+    {
+      "id": "CURR-GEN0110-U1-T01",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U1",
+      "name": "Fluid Mechanics"
+    },
+    {
+      "id": "CURR-GEN0110-U1-T02",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U1",
+      "name": "Heat Transfer"
+    },
+    {
+      "id": "CURR-GEN0110-U1-T03",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U1",
+      "name": "heat measurements"
+    },
+    {
+      "id": "CURR-GEN0110-U1-T04",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U1",
+      "name": "Thermal Expansion"
+    },
+    {
+      "id": "CURR-GEN0110-U2-T05",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U2",
+      "name": "Sound waves"
+    },
+    {
+      "id": "CURR-GEN0110-U2-T06",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U2",
+      "name": "Transverse Waves"
+    },
+    {
+      "id": "CURR-GEN0110-U2-T07",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U2",
+      "name": "Eletrostartics"
+    },
+    {
+      "id": "CURR-GEN0110-U3-T08",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U3",
+      "name": "Electricity"
+    },
+    {
+      "id": "CURR-GEN0110-U3-T09",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U3",
+      "name": "Optics"
+    },
+    {
+      "id": "CURR-GEN0110-U3-T10",
+      "courseId": "COURSE-GEN0110",
+      "unitId": "UNIT-GEN0110-U3",
+      "name": "Special Relativity"
+    },
+    {
+      "id": "CURR-GEN0161-U1-T01",
+      "courseId": "COURSE-GEN0161",
+      "unitId": "UNIT-GEN0161-U1",
+      "name": "1. Introduction /Orientation"
+    },
+    {
+      "id": "CURR-GEN0161-U1-T02",
+      "courseId": "COURSE-GEN0161",
+      "unitId": "UNIT-GEN0161-U1",
+      "name": "2. Basic Principles, Concept and Definition of thermodynamics"
+    },
+    {
+      "id": "CURR-GEN0161-U1-T03",
+      "courseId": "COURSE-GEN0161",
+      "unitId": "UNIT-GEN0161-U1",
+      "name": "3. First Law of Thermodynamics"
+    },
+    {
+      "id": "CURR-GEN0161-U2-T04",
+      "courseId": "COURSE-GEN0161",
+      "unitId": "UNIT-GEN0161-U2",
+      "name": "1. Ideal Gases / Ideal gas Laws"
+    },
+    {
+      "id": "CURR-GEN0161-U2-T05",
+      "courseId": "COURSE-GEN0161",
+      "unitId": "UNIT-GEN0161-U2",
+      "name": "2. Processes of Ideal Gases"
+    },
+    {
+      "id": "CURR-GEN0161-U2-T06",
+      "courseId": "COURSE-GEN0161",
+      "unitId": "UNIT-GEN0161-U2",
+      "name": "3. Properties of Pure Substance"
+    },
+    {
+      "id": "CURR-GEN0161-U3-T07",
+      "courseId": "COURSE-GEN0161",
+      "unitId": "UNIT-GEN0161-U3",
+      "name": "1. Introduction to cycle analysis: Second Law of Thermodynamics"
+    },
+    {
+      "id": "CURR-GEN0161-U3-T08",
+      "courseId": "COURSE-GEN0161",
+      "unitId": "UNIT-GEN0161-U3",
+      "name": "2. Introduction to Gas and Vapor Cycles"
+    },
+    {
+      "id": "CURR-BSIE3219-U1-T01",
+      "courseId": "COURSE-BSIE3219",
+      "unitId": "UNIT-BSIE3219-U1",
+      "name": "Fundamentals of Algebra, Equations, and Matrices"
+    },
+    {
+      "id": "CURR-BSIE3219-U1-T02",
+      "courseId": "COURSE-BSIE3219",
+      "unitId": "UNIT-BSIE3219-U1",
+      "name": "Complex Numbers, Vectors, and Applied Problem-Solving"
+    },
+    {
+      "id": "CURR-BSIE3219-U1-T03",
+      "courseId": "COURSE-BSIE3219",
+      "unitId": "UNIT-BSIE3219-U1",
+      "name": "Advanced Algebra, Combinatorics, and Progressions"
+    },
+    {
+      "id": "CURR-BSIE3219-U2-T04",
+      "courseId": "COURSE-BSIE3219",
+      "unitId": "UNIT-BSIE3219-U2",
+      "name": "Trigonometry, Logarithms, and Basic Geometry"
+    },
+    {
+      "id": "CURR-BSIE3219-U2-T05",
+      "courseId": "COURSE-BSIE3219",
+      "unitId": "UNIT-BSIE3219-U2",
+      "name": "Analytic Geometry and Conic Sections"
+    },
+    {
+      "id": "CURR-BSIE3219-U2-T06",
+      "courseId": "COURSE-BSIE3219",
+      "unitId": "UNIT-BSIE3219-U2",
+      "name": "Fundamentals and Applications of Differential Calculus"
+    },
+    {
+      "id": "CURR-BSIE3219-U3-T07",
+      "courseId": "COURSE-BSIE3219",
+      "unitId": "UNIT-BSIE3219-U3",
+      "name": "Integral Calculus and Introductory Engineering Economy"
+    },
+    {
+      "id": "CURR-BSIE3219-U3-T08",
+      "courseId": "COURSE-BSIE3219",
+      "unitId": "UNIT-BSIE3219-U3",
+      "name": "Advanced Cash Flow Analysis and Depreciation"
+    },
+    {
+      "id": "CURR-BSIE3219-U3-T09",
+      "courseId": "COURSE-BSIE3219",
+      "unitId": "UNIT-BSIE3219-U3",
+      "name": "Economic Evaluation Methods and Applied Mechanics"
+    }
+  ]
+}

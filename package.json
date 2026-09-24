@@ -1,0 +1,40 @@
+{
+  "name": "engineering-practice-engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-quality educational practice platform for differential calculus and engineering mathematics",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:stress": "vitest run tests/stress/generator-stress.test.ts",
+    "tunnel": "powershell -ExecutionPolicy Bypass -File ./scripts/start-cloudflare-tunnel.ps1",
+    "tunnel:quick": "cloudflared tunnel --url http://localhost:3000",
+    "tunnel:quick:3010": "cloudflared tunnel --url http://localhost:3010",
+    "tunnel:config": "cloudflared tunnel --config ./cloudflare/config.yml run"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "clsx": "^2.1.1",
+    "katex": "^0.16.11",
+    "lucide-react": "^0.447.0",
+    "next": "^14.2.14",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.3"
+  },
+  "devDependencies": {
+    "@types/katex": "^0.16.7",
+    "@types/node": "^20.16.11",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.2"
+  }
+}

@@ -1,0 +1,95 @@
+import { CurriculumManifestEntry } from './types';
+
+export const AUTHORITATIVE_MANIFEST: CurriculumManifestEntry[] = [
+  {
+    syllabusId: 'SYL-001',
+    filename: 'Calculus 1.docx',
+    courseCode: 'GEN 0102',
+    courseTitle: 'Calculus 1',
+    fileType: 'docx',
+    creditUnits: 3.0,
+    creditType: 'LEC',
+    academicYear: '2025-2026',
+    term: 'First Semester',
+    revision: 'Rev 30 (2026-02-02)',
+    extractionStatus: 'COMPLETE',
+    confidence: 'HIGH',
+    notes: 'Prerequisites blank in source; 13 topics across Prelim, Midterm, and Final.'
+  },
+  {
+    syllabusId: 'SYL-002',
+    filename: 'Differential Equations.docx',
+    courseCode: 'GEN 0107',
+    courseTitle: 'Differential Equations',
+    fileType: 'docx',
+    creditUnits: 3.0,
+    creditType: 'LEC',
+    academicYear: '2026-2027',
+    term: 'First Semester',
+    revision: 'Rev 34 (2026-08-12)',
+    extractionStatus: 'COMPLETE',
+    confidence: 'HIGH',
+    notes: 'Prerequisite Calculus 2; covers ODEs, 1st order solution methods, and Laplace transforms.'
+  },
+  {
+    syllabusId: 'SYL-003',
+    filename: '1Thermodynamics.docx',
+    courseCode: 'GEN 0161',
+    courseTitle: 'Thermodynamics',
+    fileType: 'docx',
+    creditUnits: 3.0,
+    creditType: 'LEC',
+    academicYear: '2026-2027',
+    term: 'First Semester',
+    revision: 'Rev 29 (2026-08-07)',
+    extractionStatus: 'COMPLETE',
+    confidence: 'HIGH',
+    notes: 'Prerequisites Calculus 2 & Physics for Engineers; cover title Thermodynamics 1.'
+  },
+  {
+    syllabusId: 'SYL-004',
+    filename: 'Physics 2.docx',
+    courseCode: 'GEN 0110/ 0110L',
+    courseTitle: 'Physics 2 for Engineers - Lec/ Lab',
+    fileType: 'docx',
+    creditUnits: 3.0,
+    creditType: 'LEC_LAB',
+    academicYear: '2026-2027',
+    term: 'First Semester',
+    revision: 'Rev 35 (2026-08-12)',
+    extractionStatus: 'COMPLETE',
+    confidence: 'HIGH',
+    notes: 'Initial template header contains GEN 0107 copy artifact; body course section GEN 0110/0110L is authoritative.'
+  },
+  {
+    syllabusId: 'SYL-005',
+    filename: 'GE_SYL_GEN0101_20260720 (2) - Copy.docx',
+    courseCode: 'GEN 0101',
+    courseTitle: 'MATHEMATICS FOR ENGINEERS',
+    fileType: 'docx',
+    creditUnits: 3.0,
+    creditType: 'LEC',
+    academicYear: '2025-2026',
+    term: 'First Semester',
+    revision: 'Rev 3 (2026-08-21)',
+    extractionStatus: 'COMPLETE',
+    confidence: 'HIGH',
+    notes: 'Foundational algebra, word problems, systems, functions, trigonometry, and solid mensuration.'
+  },
+  {
+    syllabusId: 'SYL-006',
+    filename: 'Topics.docx',
+    courseCode: 'BSIE 3219',
+    courseTitle: 'IE Special Topics 1',
+    fileType: 'docx',
+    creditUnits: 3.0,
+    creditType: 'LEC',
+    academicYear: '2026-2027',
+    term: 'First Semester',
+    revision: 'Rev 34 (2026-08-12)',
+    extractionStatus: 'COMPLETE',
+    confidence: 'HIGH',
+    notes: 'Advanced review and integration for IE licensure preparation spanning math, economics, and mechanics.'
+  }
+];
+

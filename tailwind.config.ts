@@ -1,0 +1,103 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        engineering: {
+          50: '#f4f6f8',
+          100: '#dfe7ee',
+          200: '#bdccda',
+          300: '#8ea8c0',
+          400: '#6687a8',
+          500: '#3f668e',
+          600: '#2c4f75',
+          700: '#1d3b5e',
+          800: '#102d52',
+          900: '#0a2344',
+          950: '#061b3a',
+        },
+        brass: {
+          400: '#ffd477',
+          500: '#f7b943',
+          600: '#d99824',
+          700: '#ac7417',
+        },
+        charcoal: {
+          50: '#f6f7f8',
+          100: '#e7e9ec',
+          200: '#d0d4d8',
+          300: '#adb4bc',
+          400: '#848e99',
+          500: '#646f7b',
+          600: '#4d5763',
+          700: '#3e4650',
+          800: '#2d333b',
+          850: '#22272e',
+          900: '#181d24',
+          950: '#0f1318',
+        },
+        steel: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#060e1d',
+        },
+        // Re-map existing semantic accents to the Society palette so legacy
+        // components inherit the new visual identity without a risky rewrite.
+        purple: {
+          50: '#f4f6f8',
+          100: '#dfe7ee',
+          200: '#bdccda',
+          300: '#8ea8c0',
+          400: '#6687a8',
+          500: '#3f668e',
+          600: '#2c4f75',
+          700: '#1d3b5e',
+          800: '#102d52',
+          900: '#0a2344',
+          950: '#061b3a',
+        },
+        indigo: {
+          50: '#fff9eb',
+          100: '#ffefc2',
+          200: '#ffe39a',
+          300: '#ffd477',
+          400: '#ffd477',
+          500: '#f7b943',
+          600: '#d99824',
+          700: '#ac7417',
+          800: '#845b15',
+          900: '#5b3e10',
+          950: '#35240c',
+        },
+      },
+      boxShadow: {
+        'instrument': '0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4)',
+        'panel': '0 4px 24px -2px rgba(2, 12, 29, 0.6), 0 0 0 1px rgba(102, 135, 168, 0.18)',
+        'elevated': '0 8px 32px -4px rgba(2, 12, 29, 0.7), 0 0 0 1px rgba(142, 168, 192, 0.25)',
+        'accent': '0 0 16px -2px rgba(247, 185, 67, 0.2)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+      },
+    },
+  },
+  plugins: [],
+};
+export default config;

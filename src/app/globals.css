@@ -1,0 +1,159 @@
+@import "katex/dist/katex.min.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #06162f;
+  --foreground: #f4f6f8;
+  --brand-navy: #061b3a;
+  --brand-navy-light: #102d52;
+  --brand-steel: #eef0f2;
+  --brand-charcoal: #181d24;
+  --brand-amber: #f7b943;
+  --brand-amber-soft: #ffd477;
+  --brand-amber-muted: rgba(247, 185, 67, 0.15);
+  --border-subtle: rgba(102, 135, 168, 0.2);
+  --border-strong: rgba(142, 168, 192, 0.35);
+  --border-accent: rgba(247, 185, 67, 0.4);
+}
+
+body {
+  color: var(--foreground);
+  background:
+    radial-gradient(circle at 10% -5%, rgba(247, 185, 67, 0.08), transparent 28rem),
+    radial-gradient(circle at 90% 5%, rgba(44, 79, 117, 0.2), transparent 36rem),
+    var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(247, 185, 67, 0.35);
+  color: #fff;
+}
+
+/* Engineering Design System Components & Surfaces */
+.brand-panel {
+  background: linear-gradient(145deg, rgba(16, 45, 82, 0.92), rgba(6, 27, 58, 0.96));
+  border-color: rgba(138, 166, 194, 0.22);
+}
+
+.brand-rule {
+  border-color: rgba(247, 185, 67, 0.32);
+}
+
+.eng-panel {
+  background: linear-gradient(180deg, rgba(16, 45, 82, 0.6) 0%, rgba(6, 27, 58, 0.85) 100%);
+  border: 1px solid rgba(102, 135, 168, 0.22);
+}
+
+.eng-panel-elevated {
+  background: linear-gradient(180deg, rgba(22, 54, 96, 0.7) 0%, rgba(10, 35, 68, 0.92) 100%);
+  border: 1px solid rgba(142, 168, 192, 0.28);
+  box-shadow: 0 6px 28px -4px rgba(2, 12, 29, 0.65);
+}
+
+.eng-card {
+  background: rgba(8, 28, 54, 0.65);
+  border: 1px solid rgba(102, 135, 168, 0.18);
+}
+
+.eng-card-interactive {
+  background: rgba(8, 28, 54, 0.65);
+  border: 1px solid rgba(102, 135, 168, 0.2);
+  transition: all 0.15s ease-in-out;
+}
+
+.eng-card-interactive:hover {
+  background: rgba(16, 45, 82, 0.6);
+  border-color: rgba(142, 168, 192, 0.4);
+}
+
+.eng-badge-amber {
+  background: rgba(247, 185, 67, 0.12);
+  color: #ffd477;
+  border: 1px solid rgba(247, 185, 67, 0.35);
+}
+
+.eng-badge-steel {
+  background: rgba(102, 135, 168, 0.15);
+  color: #dfe7ee;
+  border: 1px solid rgba(102, 135, 168, 0.28);
+}
+
+.eng-badge-emerald {
+  background: rgba(16, 185, 129, 0.12);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.eng-hairline {
+  border-color: rgba(102, 135, 168, 0.18);
+}
+
+/* KaTeX custom sizing and contrast */
+.katex {
+  font-size: 1.15em !important;
+  text-rendering: optimizeLegibility;
+}
+
+.katex-display {
+  margin: 0.5em 0 !important;
+}
+
+/* Strictly hide KaTeX MathML elements to eliminate visual duplicates or raw MathML leakage */
+.katex-mathml {
+  display: none !important;
+}
+
+/* Never display alarming red raw KaTeX error text to students */
+.katex-error {
+  color: inherit !important;
+  font-family: inherit !important;
+  border-bottom: none !important;
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #06162f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #244365;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f7b943;
+}
+
+/* Reserved, non-interactive instrument illustrations. Only rotor transforms move. */
+.gear-assembly { width: 156px; height: 124px; position: relative; flex-shrink: 0; pointer-events: none; overflow: hidden; }
+.gear-assembly-plane { position: absolute; width: 195px; height: 155px; transform: scale(.8); transform-origin: top left; }
+.gear-assembly--small { width: 59px; height: 47px; }
+.gear-assembly--small .gear-assembly-plane { transform: scale(.3); }
+.gear-assembly--large { width: 195px; height: 155px; }
+.gear-assembly--large .gear-assembly-plane { transform: none; }
+.gear-position { position: absolute; }
+.mechanical-gear { display: block; color: #8ea8c0; }
+.mechanical-gear-body { fill: #244365; stroke: currentColor; }
+.mechanical-gear--brass { color: #ffd477; }
+.mechanical-gear--brass .mechanical-gear-body { fill: #845b15; }
+.gear-construction { position: absolute; inset: 0; width: 100%; height: 100%; color: #8ea8c0; opacity: .28; }
+.mechanical-loader { display: flex; align-items: center; gap: .65rem; min-height: 47px; color: #8ea8c0; font-size: .75rem; }
+.mechanical-loader[data-busy="true"] { color: #ffd477; }
+.mechanical-loader > [role="status"] { min-width: 0; }
+.dashboard-mechanism { display: none; }
+@media (min-width: 1280px) { .dashboard-mechanism { display: block; opacity: .75; } }
+@media (max-width: 374px) { .gear-position--2 { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  [data-gear-rotor] { transform: none !important; }
+  .gear-position--1 [data-gear-rotor] { transform: rotate(11.25deg) !important; }
+}
