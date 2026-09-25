@@ -812,7 +812,13 @@ export const PracticeScreen: React.FC<PracticeScreenProps> = ({
                         key={opt.id}
                         type="button"
                         disabled={isCorrect === true}
-                        onClick={() => setStudentAnswer(opt.latex)}
+                        onClick={() => {
+                          setStudentAnswer(opt.latex);
+                          if (isCorrect !== null) {
+                            setIsCorrect(null);
+                            setDiagnosis(null);
+                          }
+                        }}
                         className={`w-full p-4 rounded-lg border text-left transition flex items-center space-x-3.5 min-h-[52px] ${
                           isSelected
                             ? 'bg-[#102d52] border-brass-500 text-white shadow-md shadow-brass-500/15 ring-1 ring-brass-500/50'
@@ -842,7 +848,20 @@ export const PracticeScreen: React.FC<PracticeScreenProps> = ({
                 <MathInput
                   id="student-math-input"
                   value={studentAnswer}
-                  onChange={setStudentAnswer}
+                  onChange={(val) => {
+                    setStudentAnswer(val);
+                    if (isCorrect !== null) {
+                      setIsCorrect(null);
+                      setDiagnosis(null);
+                    }
+                  }}
+                  onSubmit={() => {
+                    if (isCorrect === true) {
+                      handleNextProblem();
+                    } else {
+                      handleSubmitAnswer();
+                    }
+                  }}
                   placeholder="e.g. 6 or 24x(4x^2 + 1)^2"
                   disabled={isCorrect === true}
                   ariaLabel="Mathematical answer input"
@@ -884,22 +903,41 @@ export const PracticeScreen: React.FC<PracticeScreenProps> = ({
                     disabled={isTransitioning}
                     className="px-6 py-2.5 min-h-[44px] rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center space-x-2 shadow-lg shadow-emerald-600/30 transition"
                   >
-                    <span>Next Recommended</span>
+                    <span>Next Problem</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 ) : (
-                  <button
-                    onClick={() => handleSubmitAnswer()}
-                    disabled={!studentAnswer.trim() || isSubmitting}
-                    className="px-6 py-2.5 min-h-[44px] rounded-lg bg-brass-500 hover:bg-brass-400 disabled:opacity-50 text-[#061b3a] font-bold text-sm flex items-center space-x-2 shadow-[0_2px_12px_rgba(247,185,67,0.25)] transition"
-                  >
-                    {isSubmitting ? (
-                      <RefreshCw className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <ChevronRight className="w-4 h-4" />
-                    )}
-                    <span>{isSubmitting ? 'Verifying...' : 'Submit Verification'}</span>
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleNextProblem()}
+                      disabled={isTransitioning}
+                      className="px-4 py-2.5 min-h-[44px] rounded-lg border border-[#2c4f75]/40 hover:bg-[#102d52]/60 text-slate-300 hover:text-white text-xs font-mono font-medium flex items-center space-x-1.5 transition"
+                      title={isCorrect === false ? 'Skip to next problem' : 'Skip this problem without submitting'}
+                    >
+                      <span>{isCorrect === false ? 'Next Problem' : 'Skip to Next'}</span>
+                      <ArrowRight className="w-4 h-4 text-slate-400" />
+                    </button>
+
+                    <button
+                      onClick={() => handleSubmitAnswer()}
+                      disabled={!studentAnswer.trim() || isSubmitting}
+                      className="px-6 py-2.5 min-h-[44px] rounded-lg bg-brass-500 hover:bg-brass-400 disabled:opacity-50 text-[#061b3a] font-bold text-sm flex items-center space-x-2 shadow-[0_2px_12px_rgba(247,185,67,0.25)] transition"
+                    >
+                      {isSubmitting ? (
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4" />
+                      )}
+                      <span>
+                        {isSubmitting
+                          ? 'Verifying...'
+                          : isCorrect === false
+                          ? 'Try Again'
+                          : 'Submit Verification'}
+                      </span>
+                    </button>
+                  </>
                 )}
               </div>
             </div>
@@ -1002,12 +1040,21 @@ export const PracticeScreen: React.FC<PracticeScreenProps> = ({
                   ) : (
                     <>
                       <XCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
-                      <div>
+                      <div className="flex-1">
                         <div>Answer Incorrect &bull; Equivalence check failed</div>
                         <p className="text-xs font-normal text-rose-300/90 mt-0.5">
-                          Not quite equivalent. Try reviewing the derivation steps or progressive hints below.
+                          Not quite equivalent. Try reviewing hints below, or advance to the next problem.
                         </p>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => handleNextProblem()}
+                        disabled={isTransitioning}
+                        className="px-3 py-1.5 rounded-md bg-rose-900/60 hover:bg-rose-900 border border-rose-700/80 text-white font-mono text-xs flex items-center space-x-1.5 transition shrink-0 ml-2"
+                      >
+                        <span>Next Problem</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
                     </>
                   )}
                 </div>

@@ -38,5 +38,6 @@ next-env.d.ts
 
 # scratch & test artifacts
 .pnpm-store/
+scratch/
 scratch_prompt*.txt
 vitest_results.json
