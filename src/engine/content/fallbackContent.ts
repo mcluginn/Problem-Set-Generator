@@ -158,7 +158,7 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
           const result = v1 * v2 + v3 * v4;
           answer = result;
           expressionLatex = `${v1} \\times ${v2} + ${v3} \\times ${v4}`;
-          promptText = `Evaluate the arithmetic expression ${expressionLatex} using the standard order of operations.`;
+          promptText = 'Evaluate the arithmetic expression using the standard order of operations:';
           method = 'order of operations';
           break;
         }
@@ -176,7 +176,7 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
           const n = round((1 + (variant % 3)) / 2 + 1 / 4);
           answer = n;
           expressionLatex = `\\frac{${1 + (variant % 3)}}{2}+\\frac{1}{4}`;
-          promptText = `Compute the rational-fraction sum ${expressionLatex} and give the simplified decimal value.`;
+          promptText = 'Compute the rational-fraction sum and give the simplified decimal value:';
           method = 'common denominators and fraction simplification';
           break;
         }
@@ -197,7 +197,7 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
           const q = 3 + (a % 4);
           answer = p * q;
           expressionLatex = `x^2+${p + q}x+${p * q}`;
-          promptText = `For ${expressionLatex}=0, factor the polynomial and report the product of its two roots.`;
+          promptText = 'Factor the polynomial and report the product of its two roots:';
           method = 'polynomial factoring';
           break;
         }
@@ -207,7 +207,7 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
           const base = 2;
           answer = m + n;
           expressionLatex = `2^{${m}} \\cdot 2^{${n}} = 2^{k}`;
-          promptText = `Using exponent laws, find the exponent k such that ${expressionLatex}.`;
+          promptText = 'Using exponent laws, find the exponent $k$:';
           method = 'exponent product rule';
           break;
         }
@@ -229,21 +229,53 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
           const cCoeff = r1 * r2;
           const signStr = bCoeff >= 0 ? `+ ${bCoeff}` : `- ${Math.abs(bCoeff)}`;
           expressionLatex = bCoeff === 0 ? `x^2 - ${cCoeff} = 0` : `x^2 ${signStr}x - ${cCoeff} = 0`;
-          promptText = `Find the positive root of the quadratic equation ${expressionLatex}.`;
+          promptText = 'Find the positive root of the quadratic equation:';
           answer = r1;
           method = 'quadratic factoring and formula';
           break;
         }
         case 'SKILL-GEN0101-009': {
-          // Systems of Equations: x + y = sum, x - y = diff
-          const xVal = 4 + (a % 5);
-          const yVal = 2 + (b % 4);
-          const sum = xVal + yVal;
-          const diff = xVal - yVal;
-          expressionLatex = `\\begin{cases} x + y = ${sum} \\\\ x - y = ${diff} \\end{cases}`;
-          promptText = `Solve the system of linear equations for x:`;
-          answer = xVal;
-          method = 'elimination method';
+          // Systems of Equations: 2x2, 3x3, 4x4, and non-linear
+          const mode = variant % 4;
+          const xVal = 3 + (a % 4);
+          const yVal = 2 + (b % 3);
+          const zVal = 1 + ((a + b) % 3);
+          const wVal = 1 + (a % 3);
+
+          if (mode === 0) {
+            // 2x2 System
+            const sum = xVal + yVal;
+            const diff = xVal - yVal;
+            expressionLatex = `\\begin{cases} x + y = ${sum} \\\\ x - y = ${diff} \\end{cases}`;
+            promptText = `Solve the system of linear equations for x:`;
+            answer = xVal;
+            method = 'elimination method';
+          } else if (mode === 1) {
+            // 3x3 System
+            const d1 = xVal + yVal + zVal;
+            const d2 = 2 * xVal - yVal + zVal;
+            const d3 = xVal + 2 * yVal - zVal;
+            expressionLatex = `\\begin{cases} x + y + z = ${d1} \\\\ 2x - y + z = ${d2} \\\\ x + 2y - z = ${d3} \\end{cases}`;
+            promptText = `Solve the 3x3 system of linear equations for x:`;
+            answer = xVal;
+            method = '3x3 Gaussian elimination';
+          } else if (mode === 2) {
+            // 4x4 System
+            const d1 = wVal + xVal + yVal + zVal;
+            const d2 = wVal - xVal + 2 * yVal - zVal;
+            const d3 = 2 * wVal + xVal - yVal + zVal;
+            const d4 = wVal - 2 * xVal + yVal + 2 * zVal;
+            expressionLatex = `\\begin{cases} w + x + y + z = ${d1} \\\\ w - x + 2y - z = ${d2} \\\\ 2w + x - y + z = ${d3} \\\\ w - 2x + y + 2z = ${d4} \\end{cases}`;
+            promptText = `Solve the 4x4 system of linear equations for w:`;
+            answer = wVal;
+            method = '4x4 Gaussian elimination';
+          } else {
+            // Non-linear Parabola and Line system: y = x^2 - x + 1 and y = x + 4 => roots 3 and -1
+            expressionLatex = `\\begin{cases} y = x^2 - x + 1 \\\\ y = x + 4 \\end{cases}`;
+            promptText = `Find the positive x-coordinate of intersection for the non-linear system:`;
+            answer = 3;
+            method = 'quadratic substitution';
+          }
           break;
         }
         case 'SKILL-GEN0101-010': {
@@ -253,7 +285,7 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
             const root = 2 + (a % 7);
             const num = 1 + (b % 5);
             expressionLatex = `f(x) = \\frac{${num}}{x - ${root}}`;
-            promptText = `Determine the value of x excluded from the natural domain of ${expressionLatex}.`;
+            promptText = 'Determine the value of $x$ excluded from the natural domain of the function:';
             answer = root;
             method = 'natural domain rational restriction';
           } else if (mode === 1) {
@@ -262,8 +294,8 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
             const x0 = 1 + (c % 3);
             const gVal = x0 + 2;
             const fgVal = m * gVal + k;
-            expressionLatex = `f(x) = ${m}x + ${k}, \\quad g(x) = x + 2`;
-            promptText = `Given ${expressionLatex}, evaluate the composite function (f \\circ g)(${x0}).`;
+            expressionLatex = `(f \\circ g)(${x0})`;
+            promptText = `Given the functions $f(x) = ${m}x + ${k}$ and $g(x) = x + 2$, evaluate the composite function $(f \\circ g)(${x0})$:`;
             answer = fgVal;
             method = 'function composition';
           } else if (mode === 2) {
@@ -271,14 +303,14 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
             const k = 1 + (b % 4);
             const x0 = 2 + (variant % 4);
             const y0 = m * x0 - k;
-            expressionLatex = `f(x) = ${m}x - ${k}`;
-            promptText = `For the function ${expressionLatex}, determine the inverse value f^{-1}(${y0}).`;
+            expressionLatex = `f^{-1}(${y0})`;
+            promptText = `For the function $f(x) = ${m}x - ${k}$, determine the inverse value $f^{-1}(${y0})$:`;
             answer = x0;
             method = 'inverse function calculation';
           } else {
             const k = 2 + (b % 6);
             expressionLatex = `f(x) = \\sqrt{x - ${k}}`;
-            promptText = `Find the minimum real value of x in the natural domain of ${expressionLatex}.`;
+            promptText = 'Find the minimum real value of $x$ in the natural domain of the function:';
             answer = k;
             method = 'radical function natural domain';
           }
@@ -292,7 +324,7 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
             const value = base ** exponent;
             answer = exponent;
             expressionLatex = `${base}^{x} = ${value}`;
-            promptText = `Solve the exponential equation ${expressionLatex} for x.`;
+            promptText = 'Solve the exponential equation for $x$:';
             method = 'exponential equation laws';
           } else {
             const base = 2 + (variant % 3);
@@ -300,7 +332,7 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
             const arg = base ** ansVal;
             answer = arg;
             expressionLatex = `\\log_{${base}}(x) = ${ansVal}`;
-            promptText = `Solve the logarithmic equation ${expressionLatex} for x.`;
+            promptText = 'Solve the logarithmic equation for $x$:';
             method = 'logarithmic definitions and properties';
           }
           break;
@@ -484,7 +516,7 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
             const evalResult = coeff * (xVal ** 2) + k * xVal + constVal;
             answer = evalResult;
             expressionLatex = `f(x) = ${coeff > 1 ? coeff : ''}x^2 + ${k}x + ${constVal}`;
-            promptText = `Evaluate the function ${expressionLatex} at x = ${xVal}.`;
+            promptText = `Evaluate the function at $x = ${xVal}$:`;
             method = 'algebraic function evaluation';
           }
         }

@@ -422,6 +422,7 @@ export interface ValidatedProblem {
     overallQuality: number;        // 0 to 1
   };
   lifecycleStatus: ProblemLifecycleStatus;
+  distractors?: ProblemDistractor[];
   createdAt: string;
 }
 

@@ -401,7 +401,10 @@ export class ContentGenerator {
         skillClusterId: request.skillClusterId || skill.parentTopicId || skill.id,
         problemFamilyId: request.problemFamilyId || family.id,
         isParameterVariation: Boolean(sampledParams && Object.keys(sampledParams).length > 0),
-        statement: rawCandidate.statement,
+        statement: {
+          ...rawCandidate.statement,
+          options: rawCandidate.statement.options || (rawCandidate as any).distractors
+        },
         rawExpression: rawCandidate.rawExpression,
         solution: {
           canonicalAnswerLatex,
@@ -419,6 +422,7 @@ export class ContentGenerator {
           overallQuality: 1.0
         },
         lifecycleStatus: 'VALID',
+        distractors: (rawCandidate as any).distractors,
         createdAt: new Date().toISOString()
       };
 

@@ -916,48 +916,73 @@ export class MathNormalizer {
       return ` ${key} `;
     });
 
+    // Protect generated inline math blocks from subsequent regex passes
+    const mathMap = new Map<string, string>();
+    let mathCount = 0;
+    const addMathBlock = (latex: string): string => {
+      const key = `@@MATHBLOCK${mathCount++}@@`;
+      mathMap.set(key, `\\(${latex.trim()}\\)`);
+      return key;
+    };
+
+    // Clean prose-embedded LaTeX spacing such as "f(x) = 3x+4, \quad g(x) = x+2"
+    res = res.replace(/,\s*\\(?:quad|qquad)\s*/g, ', and ');
+    res = res.replace(/\\(?:quad|qquad)\s*/g, ' ');
+
+    // Detect composite function notation in prose: (f \circ g)(2), (f \circ g)(x), f \circ g
+    res = res.replace(
+      /(?<![\$\\\(a-zA-Z0-9])(\(?\s*[a-zA-Z]\s*\\circ\s*[a-zA-Z]\s*\)?(?:\s*\([^)]*\))?)(?![\$\\\)a-zA-Z0-9])/g,
+      (match) => addMathBlock(match)
+    );
+
+    // Detect inverse function notation in prose: f^{-1}(x), f^{-1}(10), f^{-1}
+    res = res.replace(
+      /(?<![\$\\\(a-zA-Z0-9])([a-zA-Z]\^\{?-1\}?(?:\s*\([^)]*\))?)(?![\$\\\)a-zA-Z0-9])/g,
+      (match) => addMathBlock(match)
+    );
+
     // Detect higher-order and first-order derivatives: d^2y/dx^2, dy/dx, df/dx, du/dt, etc. (when not part of equation)
     res = res.replace(
       /(?<=\b|\s|\()d\^?2([a-zA-Z])\/d([a-zA-Z])\^?2(?!\s*=)(?=\b|\s|[,;.:\?!]|\))/g,
-      (match) => `\\(${MathNormalizer.normalizePureMath(match)}\\)`
+      (match) => addMathBlock(MathNormalizer.normalizePureMath(match))
     );
     res = res.replace(
       /(?<=\b|\s|\()d([a-zA-Z])\/d([a-zA-Z])(?!\s*=)(?=\b|\s|[,;.:\?!]|\))/g,
-      (match) => `\\(${MathNormalizer.normalizePureMath(match)}\\)`
+      (match) => addMathBlock(MathNormalizer.normalizePureMath(match))
     );
     res = res.replace(
       /(?<=\b|\s|\()del\s+([a-zA-Z])\/del\s+([a-zA-Z])(?!\s*=)(?=\b|\s|[,;.:\?!]|\))/gi,
-      (match) => `\\(${MathNormalizer.normalizePureMath(match)}\\)`
+      (match) => addMathBlock(MathNormalizer.normalizePureMath(match))
     );
 
     // Detect un-delimited LaTeX macros in prose: \frac{...}{...}, \sqrt{...}, \cos, \sin, \theta, etc.
     res = res.replace(
-      /(?<![\$\\\(])(\\(?:frac|sqrt|lim|sum|int|iint|iiint|oint|prod|partial|pm|mp|cdot|times|cos|sin|tan|sec|csc|cot|sinh|cosh|tanh|ln|log|exp|theta|alpha|beta|gamma|delta|lambda|mu|nu|pi|rho|sigma|tau|phi|psi|omega|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|approx|ll|gg|le|ge|ne|to|infty)(?:\{[^{}]*\}|\[[^\[\]]*\])*(?:\{[^{}]*\})*)(?![\$\\\)])/g,
-      (match) => `\\(${match}\\)`
+      /(?<![\$\\\(])(\\(?:frac|sqrt|lim|sum|int|iint|iiint|oint|prod|partial|pm|mp|cdot|times|circ|quad|qquad|deg|degree|cap|cup|setminus|cos|sin|tan|sec|csc|cot|sinh|cosh|tanh|ln|log|exp|theta|alpha|beta|gamma|delta|lambda|mu|nu|pi|rho|sigma|tau|phi|psi|omega|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|approx|ll|gg|le|ge|ne|to|infty)(?:\{[^{}]*\}|\[[^\[\]]*\])*(?:\{[^{}]*\})*)(?![\$\\\)])/g,
+      (match) => addMathBlock(match)
     );
 
     // Detect un-delimited variables with subscripts: v_{\text{flow}}, v_{flow}, x_{1}, etc.
     res = res.replace(
       /(?<![\$\\\(a-zA-Z0-9])\b([a-zA-Z])_\{([^}]+)\}(?![\$\\\)a-zA-Z0-9])/g,
-      (match) => `\\(${match}\\)`
+      (match) => addMathBlock(match)
     );
 
     // Detect standalone numerical fractions (e.g. 1/6, 3/4) not part of engineering units
     res = res.replace(
       /(?<=\s|^)(\d+)\s*\/\s*(\d+)(?=[,;.\?!]|\s|$)/g,
-      (_, num, den) => `\\(\\frac{${num}}{${den}}\\)`
+      (_, num, den) => addMathBlock(`\\frac{${num}}{${den}}`)
     );
 
     // Detect limits: lim (x -> 3) ...
     res = res.replace(
       /\blim\s*(?:\([^)]+\)|[a-zA-Z]\s*->\s*[^\s,;()]+)\s*[^,;.\n]+/g,
-      (match) => `\\(${MathNormalizer.normalizePureMath(match)}\\)`
+      (match) => addMathBlock(MathNormalizer.normalizePureMath(match))
     );
 
     // Detect equations with = or ~=: [var|derivative] = [expr]
     // Scan with balanced parentheses and brackets so expressions like (2 * f0 * v_flow * cos theta) / c are never cut in half
     res = res.replace(
-      /(?<![\$\\\(])\b(d\^?[0-9]*[a-zA-Z]\/d[a-zA-Z]|(?:Delta\s+)?[a-zA-Z](?:_\{[^}]+\}|_[a-zA-Z0-9]+|\'[a-zA-Z0-9]*)?|[a-zA-Z][a-zA-Z0-9_\'\\\{\}\(\)]*)\s*(=|~=)\s*([a-zA-Z0-9_\^\/\+\-\*\(\)\[\]\s\,\{\}\\\|\:\~\=]+?(?:\.\d+[a-zA-Z0-9_\^\/\+\-\*\(\)\[\]\s\,\{\}\\\|\:\~\=]*)*)(?=\.(?!\d)|;|\n|$)/g,
+      /(?<![\$\\\(])\b(d\^?[0-9]*[a-zA-Z]\/d[a-zA-Z]|(?:Delta\s+)?[a-zA-Z](?:_\{[^}]+\}|_[a-zA-Z0-9]+|\'[a-zA-Z0-9]*)?|[a-zA-Z][a-zA-Z0-9_\'\\\{\}\(\)]*)\s*(=|~=)\s*([a-zA-Z0-9_\^\/\+\-\*\(\)\[\]\s\,\{\}\\\|\:\~\=]+?(?:\.\d+[a-zA-Z0-9_\^\/\+\-\*\(\)\[\]\s\,\{\}\\\|\:\~\=]*)*)(?=\.(?!\d)|;|\n|$|,|\s+(?:and|where|for|when|if|with)\b)/g,
       (match, left, op, fullRight) => {
         // Skip if left is an English prose word
         if (MathNormalizer.hasProseWords(left)) return match;
@@ -1005,7 +1030,8 @@ export class MathNormalizer {
         if (!validRight || MathNormalizer.hasProseWords(validRight)) return match;
 
         const remainder = fullRight.substring(cutIdx);
-        return `\\(${MathNormalizer.normalizePureMath(`${left} ${op} ${validRight}`)}\\)${remainder}`;
+        const mathKey = addMathBlock(MathNormalizer.normalizePureMath(`${left} ${op} ${validRight}`));
+        return `${mathKey}${remainder}`;
       }
     );
 
@@ -1014,7 +1040,7 @@ export class MathNormalizer {
       /(?<![\$\\\(])(?<=\b(?:Approach|Recede|Calculate|Compute|Evaluate|Substitute|Formula|Given):\s*)([0-9a-zA-Z_\^\/\+\-\*\(\)\[\]\s\.\{\}\\\|\:\~]+?)(?=(?:\s+[a-zA-Z]{4,}|\.(?!\d)|[,;:\n]|$))/gi,
       (match, formula) => {
         if (MathNormalizer.hasProseWords(formula) || !/[=^/*]/.test(formula)) return match;
-        return `\\(${MathNormalizer.normalizePureMath(formula)}\\)`;
+        return addMathBlock(MathNormalizer.normalizePureMath(formula));
       }
     );
 
@@ -1023,14 +1049,14 @@ export class MathNormalizer {
       /(?<![\$\\\(a-zA-Z0-9])([a-zA-Z](?:_[a-zA-Z0-9]+|_\{[^}]+\})?)\s*(<<|>>|<=|>=|<|>|!=)\s*([a-zA-Z0-9_\.\^]+(?:\s*[a-zA-Z/]+)?)(?![\$\\\)a-zA-Z0-9])/g,
       (match, left, op, right) => {
         if (MathNormalizer.hasProseWords(left) || MathNormalizer.hasProseWords(right)) return match;
-        return `\\(${MathNormalizer.normalizePureMath(`${left} ${op} ${right}`)}\\)`;
+        return addMathBlock(MathNormalizer.normalizePureMath(`${left} ${op} ${right}`));
       }
     );
 
     // Detect parenthetical inequality conditions e.g. (< 2 m/s vs 1540 m/s)
     res = res.replace(
       /(?<=\()\s*(<|>|<=|>=|<<|>>)\s*(\d+(?:\.\d+)?\s*(?:[a-zA-Z/]+)?)(?=\s+vs|\s*\))/g,
-      (_, op, val) => `\\(${op} ${MathNormalizer.normalizePureMath(val)}\\)`
+      (_, op, val) => addMathBlock(`${op} ${MathNormalizer.normalizePureMath(val)}`)
     );
 
     // Detect standalone subscript variables in prose: f_approach, f_recede, v_obs, v_flow, etc.
@@ -1042,11 +1068,16 @@ export class MathNormalizer {
           'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'pi', 'rho', 'sigma',
           'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'
         ]);
-        if (/^\d+$/.test(sub) || sub.length === 1 || /\d/.test(sub)) return `\\(${v}_{${sub}}\\)`;
-        if (greekNames.has(sub.toLowerCase())) return `\\(${v}_{\\${sub.toLowerCase()}}\\)`;
-        return `\\(${v}_{{\\text{${sub}}}}\\)`;
+        if (/^\d+$/.test(sub) || sub.length === 1 || /\d/.test(sub)) return addMathBlock(`${v}_{${sub}}`);
+        if (greekNames.has(sub.toLowerCase())) return addMathBlock(`${v}_{\${sub.toLowerCase()}}`);
+        return addMathBlock(`${v}_{{\\text{${sub}}}}`);
       }
     );
+
+    // Restore protected math blocks
+    for (const [k, v] of mathMap.entries()) {
+      res = res.split(k).join(v);
+    }
 
     // Restore markers
     for (const [k, v] of markerMap.entries()) {

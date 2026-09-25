@@ -491,104 +491,699 @@ export const PROBLEM_TEMPLATES_REGISTRY: Record<string, ProblemTemplate> = {
     familyId: 'FAM-GEN0101-LINEAR-SYSTEMS',
     courseId: 'COURSE-GEN0101',
     primarySkillId: 'SKILL-GEN0101-009',
-    name: 'Two-Variable Linear System Elimination Solution',
-    description: 'Solve 2x2 linear system for x and y across difficulty tiers.',
+    name: 'Linear and Non-Linear Systems Multi-Tier Solution',
+    description: 'Solve 2x2, 3x3, 4x4, and non-linear systems across difficulty tiers.',
     parameterSchema: [
-      { name: 'x', type: 'INTEGER', min: 2, max: 5, description: 'True x solution value' },
-      { name: 'y', type: 'INTEGER', min: 1, max: 4, description: 'True y solution value' }
+      { name: 'x', type: 'INTEGER', min: 1, max: 5, description: 'True x solution value' },
+      { name: 'y', type: 'INTEGER', min: 1, max: 4, description: 'True y solution value' },
+      { name: 'z', type: 'INTEGER', min: 1, max: 4, description: 'True z solution value' },
+      { name: 'w', type: 'INTEGER', min: 1, max: 4, description: 'True w solution value' }
     ],
     generateCandidate(difficulty: number, params?: Record<string, any>) {
       const xTrue = params?.x ?? 3;
       const yTrue = params?.y ?? 2;
+      const zTrue = params?.z ?? 1;
+      const wTrue = params?.w ?? 2;
+      let promptText = 'Solve the system of linear equations for x and y:';
       let exprLatex = '';
+      let canonicalLatex = '';
+      let canonicalRaw = '';
       let reasoningTrace: StructuredReasoningTraceStep[];
       let hints: StructuredHint[];
+      let distractors: ProblemDistractor[];
 
       if (difficulty <= 1) {
-        // Level 1: Direct addition elimination: x + y = c1, x - y = c2
+        // Level 1: 2x2 Direct addition elimination: x + y = c1, x - y = c2
         const c1 = xTrue + yTrue;
         const c2 = xTrue - yTrue;
         exprLatex = `\\begin{cases} x + y = ${c1} \\\\ x - y = ${c2} \\end{cases}`;
+        canonicalLatex = `x = ${xTrue}, y = ${yTrue}`;
+        canonicalRaw = `x = ${xTrue}, y = ${yTrue}`;
         reasoningTrace = [
           { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Add the two equations directly to eliminate y: 2x = c1 + c2.', pedagogicalRationale: 'Direct elimination.' },
           { stepIndex: 2, phase: 'EXECUTION', actionDescription: `2x = ${c1 + c2} => x = ${xTrue}.`, pedagogicalRationale: 'Solve x.' },
           { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Substitute x = ${xTrue}: y = ${c1} - ${xTrue} = ${yTrue}.`, pedagogicalRationale: 'Solve y.' }
         ];
         hints = [
-          { level: 1, category: 'RECOGNITION', text: 'Add the two equations to eliminate y.', revealsFinalAnswer: false },
-          { level: 2, category: 'SETUP', text: `2x = ${c1 + c2} => x = ${xTrue}.`, revealsFinalAnswer: false },
+          { level: 1, category: 'RECOGNITION', text: 'Add the two equations together to eliminate y.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `(x + y) + (x - y) = ${c1} + ${c2} => 2x = ${c1 + c2}.`, revealsFinalAnswer: false },
           { level: 3, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true },
           { level: 4, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true },
           { level: 5, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true }
+        ];
+        distractors = [
+          { id: 'DIST-SWAP', distractorLatex: `x = ${yTrue}, y = ${xTrue}`, distractorRaw: `x = ${yTrue}, y = ${xTrue}`, pedagogicalExplanation: 'Swapped variable solutions.', isPlausible: true },
+          { id: 'DIST-SIGN', distractorLatex: `x = ${xTrue}, y = ${-yTrue}`, distractorRaw: `x = ${xTrue}, y = ${-yTrue}`, pedagogicalExplanation: 'Sign error in back-substitution.', isPlausible: true },
+          { id: 'DIST-OFFSET', distractorLatex: `x = ${xTrue + 1}, y = ${Math.max(1, yTrue - 1)}`, distractorRaw: `x = ${xTrue + 1}, y = ${Math.max(1, yTrue - 1)}`, pedagogicalExplanation: 'Arithmetic division slip.', isPlausible: true }
         ];
       } else if (difficulty === 2) {
-        // Level 2: Single multiplier: 2x + y = c1, x - y = c2
-        const c1 = 2 * xTrue + yTrue;
-        const c2 = xTrue - yTrue;
-        exprLatex = `\\begin{cases} 2x + y = ${c1} \\\\ x - y = ${c2} \\end{cases}`;
-        reasoningTrace = [
-          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Add the two equations to eliminate y: 3x = c1 + c2.', pedagogicalRationale: 'Elimination.' },
-          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `3x = ${c1 + c2} => x = ${xTrue}.`, pedagogicalRationale: 'Solve x.' },
-          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Substitute x = ${xTrue}: y = ${xTrue} - ${c2} = ${yTrue}.`, pedagogicalRationale: 'Solve y.' }
-        ];
-        hints = [
-          { level: 1, category: 'RECOGNITION', text: 'Adding the equations eliminates y immediately.', revealsFinalAnswer: false },
-          { level: 2, category: 'SETUP', text: `3x = ${c1 + c2} => x = ${xTrue}.`, revealsFinalAnswer: false },
-          { level: 3, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true },
-          { level: 4, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true },
-          { level: 5, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true }
-        ];
-      } else if (difficulty === 3) {
-        // Level 3: Dual multiplier: 2x + 3y = c1, 3x - 2y = c2
+        // Level 2: 2x2 Dual multiplier: 2x + 3y = c1, 3x - 2y = c2
         const c1 = 2 * xTrue + 3 * yTrue;
         const c2 = 3 * xTrue - 2 * yTrue;
         exprLatex = `\\begin{cases} 2x + 3y = ${c1} \\\\ 3x - 2y = ${c2} \\end{cases}`;
+        canonicalLatex = `x = ${xTrue}, y = ${yTrue}`;
+        canonicalRaw = `x = ${xTrue}, y = ${yTrue}`;
         reasoningTrace = [
-          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Multiply eq1 by 2 and eq2 by 3 to eliminate y.', pedagogicalRationale: 'Dual multiplier elimination.' },
-          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `13x = ${2 * c1 + 3 * c2} => x = ${xTrue}.`, pedagogicalRationale: 'Solve x.' },
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Multiply eq1 by 2 and eq2 by 3 to eliminate y: 4x + 6y = 2c1 and 9x - 6y = 3c2.', pedagogicalRationale: 'Dual multiplier elimination.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Add equations: 13x = ${2 * c1 + 3 * c2} => x = ${xTrue}.`, pedagogicalRationale: 'Solve x.' },
           { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Substitute into eq1: 3y = ${c1} - 2(${xTrue}) => y = ${yTrue}.`, pedagogicalRationale: 'Solve y.' }
         ];
         hints = [
-          { level: 1, category: 'RECOGNITION', text: 'Multiply eq1 by 2 and eq2 by 3 to cancel y.', revealsFinalAnswer: false },
+          { level: 1, category: 'RECOGNITION', text: 'Multiply eq1 by 2 and eq2 by 3 so the y coefficients cancel out upon addition.', revealsFinalAnswer: false },
           { level: 2, category: 'SETUP', text: `13x = ${2 * c1 + 3 * c2} => x = ${xTrue}.`, revealsFinalAnswer: false },
           { level: 3, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true },
           { level: 4, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true },
           { level: 5, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true }
         ];
-      } else {
-        // Level 4: 3x + 5y = c1, 4x - 3y = c2
-        const c1 = 3 * xTrue + 5 * yTrue;
-        const c2 = 4 * xTrue - 3 * yTrue;
-        exprLatex = `\\begin{cases} 3x + 5y = ${c1} \\\\ 4x - 3y = ${c2} \\end{cases}`;
+        distractors = [
+          { id: 'DIST-SWAP', distractorLatex: `x = ${yTrue}, y = ${xTrue}`, distractorRaw: `x = ${yTrue}, y = ${xTrue}`, pedagogicalExplanation: 'Swapped coordinates.', isPlausible: true },
+          { id: 'DIST-SIGN', distractorLatex: `x = ${xTrue}, y = ${-yTrue}`, distractorRaw: `x = ${xTrue}, y = ${-yTrue}`, pedagogicalExplanation: 'Sign slip during substitution.', isPlausible: true },
+          { id: 'DIST-COEFF', distractorLatex: `x = ${xTrue + 1}, y = ${yTrue + 1}`, distractorRaw: `x = ${xTrue + 1}, y = ${yTrue + 1}`, pedagogicalExplanation: 'Cross multiplication multiplier omission.', isPlausible: true }
+        ];
+      } else if (difficulty === 3) {
+        // Level 3: 3x3 Linear System (x, y, z)
+        promptText = 'Solve the 3x3 system of linear equations for x, y, and z:';
+        const d1 = xTrue + yTrue + zTrue;
+        const d2 = 2 * xTrue - yTrue + zTrue;
+        const d3 = xTrue + 2 * yTrue - zTrue;
+        exprLatex = `\\begin{cases} x + y + z = ${d1} \\\\ 2x - y + z = ${d2} \\\\ x + 2y - z = ${d3} \\end{cases}`;
+        canonicalLatex = `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`;
+        canonicalRaw = `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`;
         reasoningTrace = [
-          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Multiply eq1 by 3 and eq2 by 5 to eliminate y.', pedagogicalRationale: 'Elimination.' },
-          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `29x = ${3 * c1 + 5 * c2} => x = ${xTrue}.`, pedagogicalRationale: 'Solve x.' },
-          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Substitute into eq1: 5y = ${c1} - 3(${xTrue}) => y = ${yTrue}.`, pedagogicalRationale: 'Solve y.' }
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Add (eq 1) and (eq 2) to eliminate y: 3x + 2z = d1 + d2.', pedagogicalRationale: 'Eliminate y first.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Multiply eq1 by 2 and subtract eq3 to eliminate y: x + 3z = 2d1 - d3. Solve the 2x2 system for x = ${xTrue}, z = ${zTrue}.`, pedagogicalRationale: 'Solve reduced 2x2 system.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Substitute x = ${xTrue} and z = ${zTrue} into (eq 1): y = ${d1} - ${xTrue} - ${zTrue} = ${yTrue}.`, pedagogicalRationale: 'Back-substitute.' }
         ];
         hints = [
-          { level: 1, category: 'RECOGNITION', text: 'Multiply eq1 by 3 and eq2 by 5 to eliminate y.', revealsFinalAnswer: false },
-          { level: 2, category: 'SETUP', text: `29x = ${3 * c1 + 5 * c2} => x = ${xTrue}.`, revealsFinalAnswer: false },
-          { level: 3, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true },
-          { level: 4, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true },
-          { level: 5, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}`, revealsFinalAnswer: true }
+          { level: 1, category: 'RECOGNITION', text: 'Add eq1 and eq2 directly to eliminate y, producing an equation with only x and z.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `3x + 2z = ${d1 + d2}, and multiply eq1 by 2 then subtract eq3 to get another x-z equation.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+          { level: 4, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+          { level: 5, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true }
+        ];
+        distractors = [
+          { id: 'DIST-3X3-SWAP', distractorLatex: `x = ${yTrue}, y = ${xTrue}, z = ${zTrue}`, distractorRaw: `x = ${yTrue}, y = ${xTrue}, z = ${zTrue}`, pedagogicalExplanation: 'Swapped x and y variable values.', isPlausible: true },
+          { id: 'DIST-3X3-SIGN', distractorLatex: `x = ${xTrue}, y = ${yTrue}, z = ${-zTrue}`, distractorRaw: `x = ${xTrue}, y = ${yTrue}, z = ${-zTrue}`, pedagogicalExplanation: 'Sign error when isolating z.', isPlausible: true },
+          { id: 'DIST-3X3-SUB', distractorLatex: `x = ${xTrue}, y = ${zTrue}, z = ${yTrue}`, distractorRaw: `x = ${xTrue}, y = ${zTrue}, z = ${yTrue}`, pedagogicalExplanation: 'Swapped y and z during back-substitution.', isPlausible: true }
+        ];
+      } else {
+        // Level 4: 4x4 Linear System (w, x, y, z)
+        promptText = 'Solve the 4x4 system of linear equations for w, x, y, and z:';
+        const d1 = wTrue + xTrue + yTrue + zTrue;
+        const d2 = wTrue - xTrue + 2 * yTrue - zTrue;
+        const d3 = 2 * wTrue + xTrue - yTrue + zTrue;
+        const d4 = wTrue - 2 * xTrue + yTrue + 2 * zTrue;
+        exprLatex = `\\begin{cases} w + x + y + z = ${d1} \\\\ w - x + 2y - z = ${d2} \\\\ 2w + x - y + z = ${d3} \\\\ w - 2x + y + 2z = ${d4} \\end{cases}`;
+        canonicalLatex = `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`;
+        canonicalRaw = `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`;
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Form augmented matrix and eliminate w from eq2, eq3, eq4 using row operations.', pedagogicalRationale: 'Gaussian elimination step 1.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Reduce the 3x3 subsystem in x, y, and z to upper echelon form: z = ${zTrue}, y = ${yTrue}, x = ${xTrue}.`, pedagogicalRationale: 'Solve triangular form.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Back-substitute into eq1: w = ${d1} - (${xTrue} + ${yTrue} + ${zTrue}) = ${wTrue}.`, pedagogicalRationale: 'Isolate w.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Subtract equation 1 from equations 2 and 4, and 2*(equation 1) from equation 3 to eliminate w.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: 'This yields a 3x3 system in x, y, and z that can be solved with standard elimination.', revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+          { level: 4, category: 'GUIDED_CALCULATION', text: `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+          { level: 5, category: 'GUIDED_CALCULATION', text: `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true }
+        ];
+        distractors = [
+          { id: 'DIST-4X4-SWAP', distractorLatex: `w = ${xTrue}, x = ${wTrue}, y = ${yTrue}, z = ${zTrue}`, distractorRaw: `w = ${xTrue}, x = ${wTrue}, y = ${yTrue}, z = ${zTrue}`, pedagogicalExplanation: 'Swapped w and x coordinates.', isPlausible: true },
+          { id: 'DIST-4X4-SIGN', distractorLatex: `w = ${wTrue}, x = ${xTrue}, y = ${-yTrue}, z = ${zTrue}`, distractorRaw: `w = ${wTrue}, x = ${xTrue}, y = ${-yTrue}, z = ${zTrue}`, pedagogicalExplanation: 'Sign error on y.', isPlausible: true },
+          { id: 'DIST-4X4-SLIP', distractorLatex: `w = ${wTrue}, x = ${xTrue}, y = ${zTrue}, z = ${yTrue}`, distractorRaw: `w = ${wTrue}, x = ${xTrue}, y = ${zTrue}, z = ${yTrue}`, pedagogicalExplanation: 'Swapped y and z during back-substitution.', isPlausible: true }
         ];
       }
 
       const rawAst = constant(xTrue);
       return {
         statement: {
-          promptText: 'Solve the system of linear equations for x and y:',
+          promptText,
+          expressionLatex: exprLatex,
+          targetVariable: difficulty >= 4 ? 'w' : 'x',
+          independentVariable: 'y'
+        },
+        rawExpression: rawAst,
+        canonicalAnswerLatex: canonicalLatex,
+        canonicalAnswerRaw: canonicalRaw,
+        distractors,
+        reasoningTrace,
+        hints,
+        difficultyVector: { overall: difficulty || 2, conceptual: difficulty, procedural: difficulty, computational: difficulty >= 3 ? 3 : 2, reasoning: 2, representation: 1, context: 1, multiStep: difficulty },
+        structureSignature: `GEN0101:SYSTEMS:DIFF${difficulty}_X${xTrue}_Y${yTrue}_Z${zTrue}`
+      };
+    }
+  },
+
+  'TMPL-GEN0101-SYSTEMS-3X3': {
+    id: 'TMPL-GEN0101-SYSTEMS-3X3',
+    familyId: 'FAM-GEN0101-LINEAR-SYSTEMS',
+    courseId: 'COURSE-GEN0101',
+    primarySkillId: 'SKILL-GEN0101-009',
+    name: 'Three-Variable Linear System Elimination and Matrix Solution',
+    description: 'Solve 3x3 simultaneous linear equations using Gaussian elimination and Cramer rule.',
+    parameterSchema: [
+      { name: 'x', type: 'INTEGER', min: 1, max: 4, description: 'True x value' },
+      { name: 'y', type: 'INTEGER', min: 1, max: 4, description: 'True y value' },
+      { name: 'z', type: 'INTEGER', min: 1, max: 4, description: 'True z value' }
+    ],
+    generateCandidate(difficulty: number, params?: Record<string, any>) {
+      const xTrue = params?.x ?? 2;
+      const yTrue = params?.y ?? 3;
+      const zTrue = params?.z ?? 1;
+
+      let exprLatex = '';
+      let reasoningTrace: StructuredReasoningTraceStep[];
+      let hints: StructuredHint[];
+
+      if (difficulty <= 2) {
+        // Triangular / Decoupled 3x3 system: direct back-substitution
+        const d1 = xTrue + 2 * yTrue - zTrue;
+        const d2 = 3 * yTrue + zTrue;
+        const d3 = 2 * zTrue;
+        exprLatex = `\\begin{cases} x + 2y - z = ${d1} \\\\ 3y + z = ${d2} \\\\ 2z = ${d3} \\end{cases}`;
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: `Solve eq3 directly: z = ${d3}/2 = ${zTrue}.`, pedagogicalRationale: 'Direct isolate z.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Substitute z = ${zTrue} into eq2: 3y = ${d2} - ${zTrue} => y = ${yTrue}.`, pedagogicalRationale: 'Back-substitute y.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Substitute y and z into eq1: x = ${d1} - 2(${yTrue}) + ${zTrue} = ${xTrue}.`, pedagogicalRationale: 'Back-substitute x.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Solve for z directly from the third equation.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `z = ${zTrue}. Now substitute into equation 2 to find y.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+          { level: 4, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+          { level: 5, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true }
+        ];
+      } else {
+        // General 3x3 system: 2x + y - z = d1, x - 2y + z = d2, 3x - y + 2z = d3 (det = -10)
+        const d1 = 2 * xTrue + yTrue - zTrue;
+        const d2 = xTrue - 2 * yTrue + zTrue;
+        const d3 = 3 * xTrue - yTrue + 2 * zTrue;
+        exprLatex = `\\begin{cases} 2x + y - z = ${d1} \\\\ x - 2y + z = ${d2} \\\\ 3x - y + 2z = ${d3} \\end{cases}`;
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Add eq1 and eq2 to eliminate z: 3x - y = d1 + d2.', pedagogicalRationale: 'Eliminate z.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Multiply eq2 by 2 and subtract from eq3: x + 3y = ${d3 - 2 * d2}. Solve the 2x2 system for x = ${xTrue}, y = ${yTrue}.`, pedagogicalRationale: 'Solve 2x2.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Substitute into eq1: z = 2(${xTrue}) + ${yTrue} - ${d1} = ${zTrue}.`, pedagogicalRationale: 'Solve z.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Add eq1 and eq2 to eliminate z immediately.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `Combine eq2 and eq3 to get another equation in x and y.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+          { level: 4, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+          { level: 5, category: 'GUIDED_CALCULATION', text: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true }
+        ];
+      }
+
+      const distractors: ProblemDistractor[] = [
+        { id: 'OPT-3X3-SWAP', distractorLatex: `x = ${yTrue}, y = ${xTrue}, z = ${zTrue}`, distractorRaw: `x = ${yTrue}, y = ${xTrue}, z = ${zTrue}`, pedagogicalExplanation: 'Swapped x and y coordinates.', isPlausible: true },
+        { id: 'OPT-3X3-SIGN', distractorLatex: `x = ${xTrue}, y = ${yTrue}, z = ${-zTrue}`, distractorRaw: `x = ${xTrue}, y = ${yTrue}, z = ${-zTrue}`, pedagogicalExplanation: 'Sign error when isolating z.', isPlausible: true },
+        { id: 'OPT-3X3-SLIP', distractorLatex: `x = ${xTrue}, y = ${zTrue}, z = ${yTrue}`, distractorRaw: `x = ${xTrue}, y = ${zTrue}, z = ${yTrue}`, pedagogicalExplanation: 'Swapped y and z during substitution.', isPlausible: true }
+      ];
+
+      return {
+        statement: {
+          promptText: 'Solve the 3x3 system of linear equations for x, y, and z:',
           expressionLatex: exprLatex,
           targetVariable: 'x',
           independentVariable: 'y'
         },
-        rawExpression: rawAst,
-        canonicalAnswerLatex: `x = ${xTrue}, y = ${yTrue}`,
-        canonicalAnswerRaw: `x = ${xTrue}, y = ${yTrue}`,
+        rawExpression: constant(xTrue),
+        canonicalAnswerLatex: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`,
+        canonicalAnswerRaw: `x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`,
+        distractors,
         reasoningTrace,
         hints,
-        difficultyVector: { overall: difficulty || 2, conceptual: difficulty, procedural: difficulty, computational: 2, reasoning: 2, representation: 1, context: 1, multiStep: difficulty },
-        structureSignature: `GEN0101:SYSTEMS:DIFF${difficulty}_X${xTrue}_Y${yTrue}`
+        difficultyVector: { overall: difficulty || 3, conceptual: 3, procedural: 3, computational: 3, reasoning: 3, representation: 1, context: 1, multiStep: 3 },
+        structureSignature: `GEN0101:SYSTEMS_3X3:DIFF${difficulty}_X${xTrue}_Y${yTrue}_Z${zTrue}`
+      };
+    }
+  },
+
+  'TMPL-GEN0101-SYSTEMS-4X4': {
+    id: 'TMPL-GEN0101-SYSTEMS-4X4',
+    familyId: 'FAM-GEN0101-LINEAR-SYSTEMS',
+    courseId: 'COURSE-GEN0101',
+    primarySkillId: 'SKILL-GEN0101-009',
+    name: 'Four-Variable Linear System Gaussian Elimination',
+    description: 'Solve 4x4 simultaneous linear equations through systematic row operations.',
+    parameterSchema: [
+      { name: 'w', type: 'INTEGER', min: 1, max: 4, description: 'True w value' },
+      { name: 'x', type: 'INTEGER', min: 1, max: 4, description: 'True x value' },
+      { name: 'y', type: 'INTEGER', min: 1, max: 3, description: 'True y value' },
+      { name: 'z', type: 'INTEGER', min: 1, max: 4, description: 'True z value' }
+    ],
+    generateCandidate(difficulty: number, params?: Record<string, any>) {
+      const wTrue = params?.w ?? 1;
+      const xTrue = params?.x ?? 2;
+      const yTrue = params?.y ?? 1;
+      const zTrue = params?.z ?? 3;
+
+      const d1 = wTrue + xTrue + yTrue + zTrue;
+      const d2 = wTrue - xTrue + 2 * yTrue - zTrue;
+      const d3 = 2 * wTrue + xTrue - yTrue + zTrue;
+      const d4 = wTrue - 2 * xTrue + yTrue + 2 * zTrue;
+
+      const exprLatex = `\\begin{cases} w + x + y + z = ${d1} \\\\ w - x + 2y - z = ${d2} \\\\ 2w + x - y + z = ${d3} \\\\ w - 2x + y + 2z = ${d4} \\end{cases}`;
+
+      const reasoningTrace: StructuredReasoningTraceStep[] = [
+        { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Form augmented matrix and perform row operations: R2 = R2 - R1, R3 = R3 - 2R1, R4 = R4 - R1.', pedagogicalRationale: 'Eliminate w.' },
+        { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Reduce the 3x3 subsystem in x, y, and z to upper echelon form, solving for z = ${zTrue}, y = ${yTrue}, x = ${xTrue}.`, pedagogicalRationale: 'Back-substitution.' },
+        { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Back-substitute into eq1: w = ${d1} - (${xTrue} + ${yTrue} + ${zTrue}) = ${wTrue}.`, pedagogicalRationale: 'Solve w.' }
+      ];
+
+      const hints: StructuredHint[] = [
+        { level: 1, category: 'RECOGNITION', text: 'Subtract equation 1 from equations 2 and 4, and 2*(equation 1) from equation 3 to eliminate w.', revealsFinalAnswer: false },
+        { level: 2, category: 'SETUP', text: 'This yields a 3x3 system in x, y, and z that can be solved with Gaussian elimination.', revealsFinalAnswer: false },
+        { level: 3, category: 'GUIDED_CALCULATION', text: `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+        { level: 4, category: 'GUIDED_CALCULATION', text: `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true },
+        { level: 5, category: 'GUIDED_CALCULATION', text: `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`, revealsFinalAnswer: true }
+      ];
+
+      const distractors: ProblemDistractor[] = [
+        { id: 'OPT-4X4-SWAP', distractorLatex: `w = ${xTrue}, x = ${wTrue}, y = ${yTrue}, z = ${zTrue}`, distractorRaw: `w = ${xTrue}, x = ${wTrue}, y = ${yTrue}, z = ${zTrue}`, pedagogicalExplanation: 'Swapped w and x coordinates.', isPlausible: true },
+        { id: 'OPT-4X4-SIGN', distractorLatex: `w = ${wTrue}, x = ${xTrue}, y = ${-yTrue}, z = ${zTrue}`, distractorRaw: `w = ${wTrue}, x = ${xTrue}, y = ${-yTrue}, z = ${zTrue}`, pedagogicalExplanation: 'Sign error on y.', isPlausible: true },
+        { id: 'OPT-4X4-SLIP', distractorLatex: `w = ${wTrue}, x = ${xTrue}, y = ${zTrue}, z = ${yTrue}`, distractorRaw: `w = ${wTrue}, x = ${xTrue}, y = ${zTrue}, z = ${yTrue}`, pedagogicalExplanation: 'Swapped y and z during back-substitution.', isPlausible: true }
+      ];
+
+      return {
+        statement: {
+          promptText: 'Solve the 4x4 system of linear equations for w, x, y, and z:',
+          expressionLatex: exprLatex,
+          targetVariable: 'w',
+          independentVariable: 'x'
+        },
+        rawExpression: constant(wTrue),
+        canonicalAnswerLatex: `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`,
+        canonicalAnswerRaw: `w = ${wTrue}, x = ${xTrue}, y = ${yTrue}, z = ${zTrue}`,
+        distractors,
+        reasoningTrace,
+        hints,
+        difficultyVector: { overall: 4, conceptual: 4, procedural: 4, computational: 4, reasoning: 3, representation: 1, context: 1, multiStep: 4 },
+        structureSignature: `GEN0101:SYSTEMS_4X4:W${wTrue}_X${xTrue}_Y${yTrue}_Z${zTrue}`
+      };
+    }
+  },
+
+  'TMPL-GEN0101-SYSTEMS-NONLINEAR': {
+    id: 'TMPL-GEN0101-SYSTEMS-NONLINEAR',
+    familyId: 'FAM-GEN0101-LINEAR-SYSTEMS',
+    courseId: 'COURSE-GEN0101',
+    primarySkillId: 'SKILL-GEN0101-009',
+    name: 'Non-Linear Systems Quadratic and Circular Intersection',
+    description: 'Find intersection coordinates for quadratic-linear, circle-line, and hyperbolic non-linear systems.',
+    parameterSchema: [
+      { name: 'r1', type: 'INTEGER', min: 2, max: 4, description: 'First root x-coordinate' },
+      { name: 'r2', type: 'INTEGER', min: -3, max: 1, description: 'Second root x-coordinate' }
+    ],
+    generateCandidate(difficulty: number, params?: Record<string, any>) {
+      const mode = (difficulty <= 2) ? 0 : (difficulty === 3 ? 1 : 2);
+      let promptText = 'Find the intersection points (x, y) of the non-linear system:';
+      let exprLatex = '';
+      let canonicalLatex = '';
+      let canonicalRaw = '';
+      let reasoningTrace: StructuredReasoningTraceStep[];
+      let hints: StructuredHint[];
+      let distractors: ProblemDistractor[];
+
+      if (mode === 0) {
+        // Mode 0: Parabola and Line: y = x^2 - x + 1 and y = x + 4 => roots 3 and -1
+        const r1 = params?.r1 ?? 3;
+        const r2 = params?.r2 ?? -1;
+        const m = 1;
+        const d = 4;
+        const sum = r1 + r2;
+        const prod = r1 * r2;
+        const k = sum - m;
+        const c = prod + d;
+        const y1 = m * r1 + d;
+        const y2 = m * r2 + d;
+
+        exprLatex = `\\begin{cases} y = x^2 - ${k}x + ${c} \\\\ y = x + ${d} \\end{cases}`;
+        canonicalLatex = `(${r1}, ${y1}) \\text{ and } (${r2}, ${y2})`;
+        canonicalRaw = `(${r1}, ${y1}) and (${r2}, ${y2})`;
+
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: `Equate expressions for y: x^2 - ${k}x + ${c} = x + ${d}.`, pedagogicalRationale: 'Substitution.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Rearrange: x^2 - ${sum}x + ${prod} = 0 => (x - ${r1})(x - ${r2}) = 0 => x = ${r1}, ${r2}.`, pedagogicalRationale: 'Factor quadratic.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Substitute x into y = x + ${d}: y(${r1}) = ${y1}, y(${r2}) = ${y2}. Solutions: (${r1}, ${y1}) and (${r2}, ${y2}).`, pedagogicalRationale: 'Compute y-coordinates.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Set the two equations for y equal to each other to form a single quadratic equation in x.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `x^2 - ${sum}x + ${prod} = 0. Factor to find x = ${r1} and x = ${r2}.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: canonicalLatex, revealsFinalAnswer: true },
+          { level: 4, category: 'GUIDED_CALCULATION', text: canonicalLatex, revealsFinalAnswer: true },
+          { level: 5, category: 'GUIDED_CALCULATION', text: canonicalLatex, revealsFinalAnswer: true }
+        ];
+        distractors = [
+          { id: 'OPT-NL-SIGN', distractorLatex: `(${r1}, ${y1}) \\text{ and } (${-r2}, ${m * (-r2) + d})`, distractorRaw: `(${r1}, ${y1}) and (${-r2}, ${m * (-r2) + d})`, pedagogicalExplanation: 'Sign error when factoring root r2.', isPlausible: true },
+          { id: 'OPT-NL-SWAP', distractorLatex: `(${y1}, ${r1}) \\text{ and } (${y2}, ${r2})`, distractorRaw: `(${y1}, ${r1}) and (${y2}, ${r2})`, pedagogicalExplanation: 'Swapped x and y coordinates.', isPlausible: true },
+          { id: 'OPT-NL-ONE', distractorLatex: `(${r1}, ${y1}) \\text{ only}`, distractorRaw: `(${r1}, ${y1}) only`, pedagogicalExplanation: 'Forgot second intersection point.', isPlausible: true }
+        ];
+      } else if (mode === 1) {
+        // Mode 1: Circle and Line: x^2 + y^2 = 25 and x + y = 7 => (4, 3) and (3, 4)
+        exprLatex = `\\begin{cases} x^2 + y^2 = 25 \\\\ x + y = 7 \\end{cases}`;
+        canonicalLatex = `(4, 3) \\text{ and } (3, 4)`;
+        canonicalRaw = `(4, 3) and (3, 4)`;
+
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Express y in terms of x: y = 7 - x.', pedagogicalRationale: 'Linear substitution.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: 'Substitute into circle equation: x^2 + (7 - x)^2 = 25 => 2x^2 - 14x + 24 = 0 => x^2 - 7x + 12 = 0.', pedagogicalRationale: 'Form quadratic in x.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: 'Factor: (x - 4)(x - 3) = 0 => x = 4, 3. Corresponding y = 3, 4. Solutions: (4, 3) and (3, 4).', pedagogicalRationale: 'Solve.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Solve the linear equation for y: y = 7 - x, then substitute into x^2 + y^2 = 25.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: 'Expand x^2 + (7 - x)^2 = 25 to get x^2 - 7x + 12 = 0.', revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `(4, 3) \\text{ and } (3, 4)`, revealsFinalAnswer: true },
+          { level: 4, category: 'GUIDED_CALCULATION', text: `(4, 3) \\text{ and } (3, 4)`, revealsFinalAnswer: true },
+          { level: 5, category: 'GUIDED_CALCULATION', text: `(4, 3) \\text{ and } (3, 4)`, revealsFinalAnswer: true }
+        ];
+        distractors = [
+          { id: 'OPT-CIRC-SIGN', distractorLatex: `(4, 3) \\text{ and } (-3, -4)`, distractorRaw: `(4, 3) and (-3, -4)`, pedagogicalExplanation: 'Sign error in quadratic root.', isPlausible: true },
+          { id: 'OPT-CIRC-SUM', distractorLatex: `(5, 2) \\text{ and } (2, 5)`, distractorRaw: `(5, 2) and (2, 5)`, pedagogicalExplanation: 'Satisfies sum but not circle equation.', isPlausible: true },
+          { id: 'OPT-CIRC-ONE', distractorLatex: `(4, 3) \\text{ only}`, distractorRaw: `(4, 3) only`, pedagogicalExplanation: 'Missed second symmetric intersection.', isPlausible: true }
+        ];
+      } else {
+        // Mode 2: Two Parabolas (Quadratic-Quadratic): y = x^2 - 2 and y = -x^2 + 6 => x = +-2, y = 2
+        exprLatex = `\\begin{cases} y = x^2 - 2 \\\\ y = -x^2 + 6 \\end{cases}`;
+        canonicalLatex = `(2, 2) \\text{ and } (-2, 2)`;
+        canonicalRaw = `(2, 2) and (-2, 2)`;
+
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Equate expressions for y: x^2 - 2 = -x^2 + 6.', pedagogicalRationale: 'Equate.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: 'Combine terms: 2x^2 = 8 => x^2 = 4 => x = 2 or x = -2.', pedagogicalRationale: 'Solve x.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: 'Substitute x = +-2 into y = x^2 - 2: y = 4 - 2 = 2. Solutions: (2, 2) and (-2, 2).', pedagogicalRationale: 'Calculate y.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Set x^2 - 2 equal to -x^2 + 6.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: 'Add x^2 to both sides: 2x^2 = 8 => x^2 = 4.', revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `(2, 2) \\text{ and } (-2, 2)`, revealsFinalAnswer: true },
+          { level: 4, category: 'GUIDED_CALCULATION', text: `(2, 2) \\text{ and } (-2, 2)`, revealsFinalAnswer: true },
+          { level: 5, category: 'GUIDED_CALCULATION', text: `(2, 2) \\text{ and } (-2, 2)`, revealsFinalAnswer: true }
+        ];
+        distractors = [
+          { id: 'OPT-PARAB-SIGN', distractorLatex: `(2, 2) \\text{ and } (2, -2)`, distractorRaw: `(2, 2) and (2, -2)`, pedagogicalExplanation: 'Flipped sign on y instead of x.', isPlausible: true },
+          { id: 'OPT-PARAB-VAL', distractorLatex: `(4, 14) \\text{ and } (-4, 14)`, distractorRaw: `(4, 14) and (-4, 14)`, pedagogicalExplanation: 'Forgot square root: x = 4 instead of 2.', isPlausible: true },
+          { id: 'OPT-PARAB-ONE', distractorLatex: `(2, 2) \\text{ only}`, distractorRaw: `(2, 2) only`, pedagogicalExplanation: 'Omitted negative square root solution.', isPlausible: true }
+        ];
+      }
+
+      return {
+        statement: {
+          promptText,
+          expressionLatex: exprLatex,
+          targetVariable: 'x',
+          independentVariable: 'y'
+        },
+        rawExpression: constant(2),
+        canonicalAnswerLatex: canonicalLatex,
+        canonicalAnswerRaw: canonicalRaw,
+        distractors,
+        reasoningTrace,
+        hints,
+        difficultyVector: { overall: difficulty || 3, conceptual: 3, procedural: 3, computational: 3, reasoning: 3, representation: 1, context: 1, multiStep: 3 },
+        structureSignature: `GEN0101:NONLINEAR_SYSTEMS:MODE${mode}_DIFF${difficulty}`
+      };
+    }
+  },
+
+  'TMPL-GEN0101-FUNCTIONS': {
+    id: 'TMPL-GEN0101-FUNCTIONS',
+    familyId: 'FAM-GEN0101-FUNCTIONS',
+    courseId: 'COURSE-GEN0101',
+    primarySkillId: 'SKILL-GEN0101-010',
+    name: 'Function Domain, Range, Composition, and Inverses',
+    description: 'Determine natural domains, evaluate composite functions (f o g), and calculate inverse functions across difficulty tiers.',
+    parameterSchema: [
+      { name: 'a', type: 'INTEGER', min: 2, max: 5, description: 'First function linear coefficient' },
+      { name: 'b', type: 'INTEGER', min: 1, max: 6, description: 'First function constant term' },
+      { name: 'c', type: 'INTEGER', min: 1, max: 4, description: 'Second function constant term' }
+    ],
+    generateCandidate(difficulty: number, params?: Record<string, any>) {
+      const a = params?.a ?? 3;
+      const b = params?.b ?? 4;
+      const c = params?.c ?? 2;
+
+      let promptText = '';
+      let exprLatex = '';
+      let canonicalLatex = '';
+      let canonicalRaw = '';
+      let distractors: ProblemDistractor[] = [];
+      let reasoningTrace: StructuredReasoningTraceStep[] = [];
+      let hints: StructuredHint[] = [];
+
+      if (difficulty <= 1) {
+        // Level 1: Natural Domain of Rational Function: f(x) = (x + b) / (x - a), x != a
+        promptText = 'Determine the real value of $x$ excluded from the natural domain of the function:';
+        exprLatex = `f(x) = \\frac{x + ${b}}{x - ${a}}`;
+        canonicalLatex = `x = ${a}`;
+        canonicalRaw = `${a}`;
+        distractors = [
+          { id: 'distractor_neg_a', distractorLatex: `x = -${a}`, distractorRaw: `${-a}`, pedagogicalExplanation: 'Sign error when solving denominator constraint x - a = 0.', isPlausible: true },
+          { id: 'distractor_num_root', distractorLatex: `x = -${b}`, distractorRaw: `${-b}`, pedagogicalExplanation: 'Confused numerator root (zero of function) with denominator restriction (domain exclusion).', isPlausible: true },
+          { id: 'distractor_zero', distractorLatex: 'x = 0', distractorRaw: '0', pedagogicalExplanation: 'Mistakenly assumed x = 0 is always excluded.', isPlausible: true }
+        ];
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'A rational function is undefined when its denominator equals zero.', pedagogicalRationale: 'Domain constraint definition.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Set denominator to zero: x - ${a} = 0 ==> x = ${a}.`, pedagogicalRationale: 'Algebraic solving.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `The domain is all real numbers except x = ${a}.`, pedagogicalRationale: 'Conclusion.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Rational functions cannot have zero in the denominator.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `Set the denominator equal to zero: x - ${a} = 0.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `Solving x - ${a} = 0 yields x = ${a}.`, revealsFinalAnswer: true }
+        ];
+      } else if (difficulty === 2) {
+        // Level 2: Composite Function Evaluation (f \circ g)(x0) with f(x) = ax + b, g(x) = x + c, x0 = 2
+        const x0 = 2;
+        const gVal = x0 + c; // g(2) = 2 + c
+        const fgVal = a * gVal + b; // f(g(2)) = a*(2+c) + b
+        const gfVal = (a * x0 + b) + c; // g(f(2)) = (2a+b) + c (reversed composition)
+        const prodVal = (a * x0 + b) * gVal; // f(2) * g(2) (multiplication error)
+        const slipVal = a * x0 + b + c; // arithmetic slip
+
+        promptText = `Given the functions $f(x) = ${a}x + ${b}$ and $g(x) = x + ${c}$, evaluate the composite function $(f \\circ g)(${x0})$:`;
+        exprLatex = `(f \\circ g)(${x0})`;
+        canonicalLatex = `${fgVal}`;
+        canonicalRaw = `${fgVal}`;
+        distractors = [
+          { id: 'distractor_reversed_comp', distractorLatex: `${gfVal}`, distractorRaw: `${gfVal}`, pedagogicalExplanation: 'Evaluated (g \\circ f)(2) instead of (f \\circ g)(2), swapping inner and outer functions.', isPlausible: true },
+          { id: 'distractor_prod', distractorLatex: `${prodVal}`, distractorRaw: `${prodVal}`, pedagogicalExplanation: 'Multiplied f(2) * g(2) instead of performing function composition f(g(2)).', isPlausible: true },
+          { id: 'distractor_slip', distractorLatex: `${slipVal}`, distractorRaw: `${slipVal}`, pedagogicalExplanation: 'Failed to multiply the inner function by the outer coefficient.', isPlausible: true }
+        ];
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: `By definition, (f \\circ g)(${x0}) = f(g(${x0})). Evaluate the inner function g(${x0}) first.`, pedagogicalRationale: 'Composition definition.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Calculate inner value: g(${x0}) = ${x0} + ${c} = ${gVal}.`, pedagogicalRationale: 'Inner evaluation.' },
+          { stepIndex: 3, phase: 'EXECUTION', actionDescription: `Substitute into outer function: f(${gVal}) = ${a}(${gVal}) + ${b} = ${a * gVal} + ${b} = ${fgVal}.`, pedagogicalRationale: 'Outer substitution.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Evaluate the inner function first: (f o g)(2) = f(g(2)).', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `First find g(2): g(2) = 2 + ${c} = ${gVal}.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `Now evaluate f(${gVal}): f(${gVal}) = ${a}(${gVal}) + ${b} = ${fgVal}.`, revealsFinalAnswer: true }
+        ];
+      } else if (difficulty === 3) {
+        // Level 3: Symbolic Composition (f \circ g)(x) where f(x) = ax + b, g(x) = x^2 + c
+        const constTerm = a * c + b;
+        promptText = `Given $f(x) = ${a}x + ${b}$ and $g(x) = x^{2} + ${c}$, determine the expanded composite function $(f \\circ g)(x)$:`;
+        exprLatex = `(f \\circ g)(x)`;
+        canonicalLatex = `${a}x^{2} + ${constTerm}`;
+        canonicalRaw = `${a}x^2 + ${constTerm}`;
+        distractors = [
+          { id: 'distractor_no_distrib', distractorLatex: `${a}x^{2} + ${b + c}`, distractorRaw: `${a}x^2 + ${b + c}`, pedagogicalExplanation: 'Forgot to distribute the outer multiplier a to the inner constant c.', isPlausible: true },
+          { id: 'distractor_reversed_sym', distractorLatex: `(${a}x + ${b})^{2} + ${c}`, distractorRaw: `(${a}x + ${b})^2 + ${c}`, pedagogicalExplanation: 'Formulated (g \\circ f)(x) instead of (f \\circ g)(x).', isPlausible: true },
+          { id: 'distractor_sign_error', distractorLatex: `${a}x^{2} - ${constTerm}`, distractorRaw: `${a}x^2 - ${constTerm}`, pedagogicalExplanation: 'Sign error on the constant term.', isPlausible: true }
+        ];
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Formulate (f \\circ g)(x) by replacing the input variable of f with g(x): f(g(x)) = a(x^2 + c) + b.', pedagogicalRationale: 'Symbolic composition.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Expand brackets: ${a}(x^2 + ${c}) + ${b} = ${a}x^2 + ${a * c} + ${b}.`, pedagogicalRationale: 'Expansion.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Combine like constant terms: ${a}x^2 + ${constTerm}.`, pedagogicalRationale: 'Simplification.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Substitute the entire expression of g(x) into every occurrence of x in f(x).', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `f(g(x)) = ${a}(x^2 + ${c}) + ${b}.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `Distribute: ${a}x^2 + ${a * c} + ${b} = ${a}x^2 + ${constTerm}.`, revealsFinalAnswer: true }
+        ];
+      } else {
+        // Level 4: Inverse Function f^{-1}(x) of a linear function
+        // f(x) = (ax + b) / 2 ==> y = (ax + b)/2 ==> 2y = ax + b ==> ax = 2y - b ==> x = (2y - b)/a
+        // So f^{-1}(x) = (2x - b) / a
+        promptText = 'Find the inverse function $f^{-1}(x)$ for the invertible function:';
+        exprLatex = `f(x) = \\frac{${a}x + ${b}}{2}`;
+        canonicalLatex = `f^{-1}(x) = \\frac{2x - ${b}}{${a}}`;
+        canonicalRaw = `(2x - ${b})/${a}`;
+        distractors = [
+          { id: 'distractor_sign_flip', distractorLatex: `f^{-1}(x) = \\frac{2x + ${b}}{${a}}`, distractorRaw: `(2x + ${b})/${a}`, pedagogicalExplanation: 'Failed to flip the sign of the constant term when isolating x.', isPlausible: true },
+          { id: 'distractor_reciprocal', distractorLatex: `f^{-1}(x) = \\frac{2}{${a}x + ${b}}`, distractorRaw: `2/(${a}x + ${b})`, pedagogicalExplanation: 'Confused the algebraic inverse function f^{-1}(x) with the multiplicative reciprocal 1/f(x).', isPlausible: true },
+          { id: 'distractor_swap_fail', distractorLatex: `f^{-1}(x) = \\frac{${a}x - ${b}}{2}`, distractorRaw: `(${a}x - ${b})/2`, pedagogicalExplanation: 'Inverted the constant sign but did not isolate x correctly.', isPlausible: true }
+        ];
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Replace f(x) with y: y = (ax + b)/2.', pedagogicalRationale: 'Inverse setup.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Multiply both sides by 2: 2y = ${a}x + ${b}.`, pedagogicalRationale: 'Clearing denominators.' },
+          { stepIndex: 3, phase: 'EXECUTION', actionDescription: `Subtract ${b} and divide by ${a}: x = (2y - ${b})/${a}.`, pedagogicalRationale: 'Isolating input variable.' },
+          { stepIndex: 4, phase: 'SIMPLIFICATION', actionDescription: `Swap variables to express the inverse function: f^{-1}(x) = (2x - ${b})/${a}.`, pedagogicalRationale: 'Final formulation.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Set y = f(x), solve for x in terms of y, then swap x and y.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `y = (${a}x + ${b})/2 ==> 2y = ${a}x + ${b}.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `Isolate x: ${a}x = 2y - ${b} ==> x = (2y - ${b})/${a}. Hence f^{-1}(x) = (2x - ${b})/${a}.`, revealsFinalAnswer: true }
+        ];
+      }
+
+      return {
+        statement: {
+          promptText,
+          expressionLatex: exprLatex,
+          targetVariable: 'x',
+          independentVariable: 'x'
+        },
+        rawExpression: constant(1),
+        canonicalAnswerLatex: canonicalLatex,
+        canonicalAnswerRaw: canonicalRaw,
+        distractors,
+        reasoningTrace,
+        hints,
+        difficultyVector: { overall: difficulty || 2, conceptual: difficulty, procedural: difficulty, computational: 2, reasoning: difficulty, representation: 2, context: 1, multiStep: difficulty },
+        structureSignature: `GEN0101:FUNCTIONS:DIFF${difficulty}_A${a}_B${b}`
+      };
+    }
+  },
+
+  'TMPL-GEN0101-EXP-LOG': {
+    id: 'TMPL-GEN0101-EXP-LOG',
+    familyId: 'FAM-GEN0101-EXP-LOG',
+    courseId: 'COURSE-GEN0101',
+    primarySkillId: 'SKILL-GEN0101-011',
+    name: 'Exponential and Logarithmic Equations',
+    description: 'Solve basic, multi-term, and quadratic-in-form exponential and logarithmic equations across difficulty tiers.',
+    parameterSchema: [
+      { name: 'base', type: 'INTEGER', min: 2, max: 5, description: 'Logarithmic or exponential base' },
+      { name: 'k', type: 'INTEGER', min: 1, max: 4, description: 'Shift or constant term' }
+    ],
+    generateCandidate(difficulty: number, params?: Record<string, any>) {
+      const base = params?.base ?? 2;
+      const k = params?.k ?? 3;
+
+      let promptText = '';
+      let exprLatex = '';
+      let canonicalLatex = '';
+      let canonicalRaw = '';
+      let distractors: ProblemDistractor[] = [];
+      let reasoningTrace: StructuredReasoningTraceStep[] = [];
+      let hints: StructuredHint[] = [];
+
+      if (difficulty <= 1) {
+        // Level 1: Basic Exponential Equation with Same Base: base^{x - k} = base^3 ==> x - k = 3 ==> x = 3 + k
+        const expVal = 3;
+        const rhsVal = base ** expVal;
+        const ans = expVal + k;
+        promptText = 'Solve the exponential equation for $x$:';
+        exprLatex = `${base}^{x - ${k}} = ${rhsVal}`;
+        canonicalLatex = `x = ${ans}`;
+        canonicalRaw = `${ans}`;
+        distractors = [
+          { id: 'distractor_sub', distractorLatex: `x = ${expVal - k}`, distractorRaw: `${expVal - k}`, pedagogicalExplanation: 'Subtracted shift instead of adding: x = 3 - k.', isPlausible: true },
+          { id: 'distractor_mult', distractorLatex: `x = ${expVal * k}`, distractorRaw: `${expVal * k}`, pedagogicalExplanation: 'Multiplied exponent by shift instead of linear addition.', isPlausible: true },
+          { id: 'distractor_base_error', distractorLatex: `x = ${rhsVal - k}`, distractorRaw: `${rhsVal - k}`, pedagogicalExplanation: 'Equated base^{x-k} with rhs directly without taking base logarithm.', isPlausible: true }
+        ];
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: `Express ${rhsVal} as a power of ${base}: ${rhsVal} = ${base}^${expVal}.`, pedagogicalRationale: 'Common base alignment.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Equate exponents: x - ${k} = ${expVal}.`, pedagogicalRationale: 'One-to-one property of exponentials.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Solve for x: x = ${expVal} + ${k} = ${ans}.`, pedagogicalRationale: 'Linear solution.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: `Write ${rhsVal} as a power of ${base}.`, revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `${base}^{x - ${k}} = ${base}^{${expVal}} ==> x - ${k} = ${expVal}.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `Add ${k} to both sides: x = ${ans}.`, revealsFinalAnswer: true }
+        ];
+      } else if (difficulty === 2) {
+        // Level 2: Basic Logarithmic Equation: log_b(x + k) = 3 ==> x + k = b^3 ==> x = b^3 - k
+        const expVal = 3;
+        const bCubed = base ** expVal;
+        const ans = bCubed - k;
+        promptText = 'Solve the logarithmic equation for $x$:';
+        exprLatex = `\\log_{${base}}(x + ${k}) = ${expVal}`;
+        canonicalLatex = `x = ${ans}`;
+        canonicalRaw = `${ans}`;
+        distractors = [
+          { id: 'distractor_add_k', distractorLatex: `x = ${bCubed + k}`, distractorRaw: `${bCubed + k}`, pedagogicalExplanation: 'Added k instead of subtracting k from base^3.', isPlausible: true },
+          { id: 'distractor_mult_base', distractorLatex: `x = ${base * expVal - k}`, distractorRaw: `${base * expVal - k}`, pedagogicalExplanation: 'Multiplied base by 3 instead of raising base to power 3.', isPlausible: true },
+          { id: 'distractor_no_shift', distractorLatex: `x = ${bCubed}`, distractorRaw: `${bCubed}`, pedagogicalExplanation: 'Forgot to account for the +k argument shift.', isPlausible: true }
+        ];
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Rewrite the logarithmic equation in exponential form: log_b(u) = c <==> u = b^c.', pedagogicalRationale: 'Logarithm definition.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Convert: x + ${k} = ${base}^${expVal} = ${bCubed}.`, pedagogicalRationale: 'Exponential conversion.' },
+          { stepIndex: 3, phase: 'SIMPLIFICATION', actionDescription: `Solve for x: x = ${bCubed} - ${k} = ${ans}.`, pedagogicalRationale: 'Linear isolation.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Convert the log equation into its exponential equivalent: log_b(y) = c means y = b^c.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `x + ${k} = ${base}^${expVal} = ${bCubed}.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `Subtract ${k}: x = ${ans}.`, revealsFinalAnswer: true }
+        ];
+      } else if (difficulty === 3) {
+        // Level 3: Logarithm Product Rule with Extraneous Root: log_2(x) + log_2(x - 2) = 3 ==> x(x - 2) = 8 ==> x^2 - 2x - 8 = 0 ==> (x - 4)(x + 2) = 0 ==> x = 4 (reject -2)
+        const r1 = 4;
+        const r2 = 2;
+        const shift = r1 - r2; // 2
+        const prod = r1 * r2; // 8
+        const logRhs = 3;
+        promptText = 'Solve the logarithmic equation for $x$ (rejecting any extraneous roots):';
+        exprLatex = `\\log_{2}(x) + \\log_{2}(x - ${shift}) = ${logRhs}`;
+        canonicalLatex = `x = ${r1}`;
+        canonicalRaw = `${r1}`;
+        distractors = [
+          { id: 'distractor_both_roots', distractorLatex: `x = ${r1}, -${r2}`, distractorRaw: `${r1}, -${r2}`, pedagogicalExplanation: 'Forgot that logarithms of negative numbers are undefined in real numbers, failing to reject extraneous root x = -2.', isPlausible: true },
+          { id: 'distractor_extraneous_only', distractorLatex: `x = -${r2}`, distractorRaw: `${-r2}`, pedagogicalExplanation: 'Kept only the extraneous negative root.', isPlausible: true },
+          { id: 'distractor_sign_swap', distractorLatex: `x = ${r2}`, distractorRaw: `${r2}`, pedagogicalExplanation: 'Factoring sign slip on quadratic equation.', isPlausible: true }
+        ];
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Apply log product law: log_2(x) + log_2(x - 2) = log_2[x(x - 2)].', pedagogicalRationale: 'Log law application.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: `Convert to exponential form: x(x - ${shift}) = 2^${logRhs} = ${prod}.`, pedagogicalRationale: 'Exponential conversion.' },
+          { stepIndex: 3, phase: 'EXECUTION', actionDescription: `Form standard quadratic: x^2 - ${shift}x - ${prod} = 0 ==> (x - ${r1})(x + ${r2}) = 0 ==> x = ${r1} or x = -${r2}.`, pedagogicalRationale: 'Quadratic factoring.' },
+          { stepIndex: 4, phase: 'VERIFICATION', actionDescription: `Check domain: log_2(x) requires x > 0 and x - ${shift} > 0. Since x = -${r2} gives log_2(-${r2}) which is undefined, reject x = -${r2}. The only valid solution is x = ${r1}.`, pedagogicalRationale: 'Extraneous root rejection.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Use log_b(A) + log_b(B) = log_b(A * B).', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: `x(x - ${shift}) = 2^${logRhs} = ${prod} ==> x^2 - ${shift}x - ${prod} = 0.`, revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: `(x - ${r1})(x + ${r2}) = 0 ==> x = ${r1} or x = -${r2}. Because log(x) requires x > 0, reject x = -${r2}. The valid answer is x = ${r1}.`, revealsFinalAnswer: true }
+        ];
+      } else {
+        // Level 4: Quadratic-in-Form Exponential Equation: 2^{2x} - 6 * 2^x + 8 = 0 ==> u^2 - 6u + 8 = 0 ==> (u - 2)(u - 4) = 0 ==> u = 2, 4 ==> x = 1, 2
+        promptText = 'Solve the quadratic-form exponential equation for all real solutions $x$:';
+        exprLatex = '2^{2x} - 6 \\cdot 2^{x} + 8 = 0';
+        canonicalLatex = 'x = 1, 2';
+        canonicalRaw = '1, 2';
+        distractors = [
+          { id: 'distractor_forgot_log', distractorLatex: 'x = 2, 4', distractorRaw: '2, 4', pedagogicalExplanation: 'Solved for substitution variable u = 2^x, but forgot to take base-2 logarithm to find x.', isPlausible: true },
+          { id: 'distractor_sign_error', distractorLatex: 'x = -1, -2', distractorRaw: '-1, -2', pedagogicalExplanation: 'Sign error on exponent values.', isPlausible: true },
+          { id: 'distractor_single_root', distractorLatex: 'x = 1', distractorRaw: '1', pedagogicalExplanation: 'Found only the first root, omitting x = 2.', isPlausible: true }
+        ];
+        reasoningTrace = [
+          { stepIndex: 1, phase: 'RECOGNITION', actionDescription: 'Recognize quadratic-in-form structure: let u = 2^x, so 2^{2x} = (2^x)^2 = u^2.', pedagogicalRationale: 'Substitution recognition.' },
+          { stepIndex: 2, phase: 'EXECUTION', actionDescription: 'Rewrite as polynomial: u^2 - 6u + 8 = 0.', pedagogicalRationale: 'Algebraic substitution.' },
+          { stepIndex: 3, phase: 'EXECUTION', actionDescription: 'Factor the quadratic: (u - 2)(u - 4) = 0 ==> u = 2 or u = 4.', pedagogicalRationale: 'Quadratic solution.' },
+          { stepIndex: 4, phase: 'SIMPLIFICATION', actionDescription: 'Substitute back: 2^x = 2 ==> x = 1, and 2^x = 4 ==> x = 2. Solutions: x = 1, 2.', pedagogicalRationale: 'Back substitution.' }
+        ];
+        hints = [
+          { level: 1, category: 'RECOGNITION', text: 'Let u = 2^x, turning the equation into a standard quadratic u^2 - 6u + 8 = 0.', revealsFinalAnswer: false },
+          { level: 2, category: 'SETUP', text: 'Factor: (u - 2)(u - 4) = 0 ==> u = 2 and u = 4.', revealsFinalAnswer: false },
+          { level: 3, category: 'GUIDED_CALCULATION', text: 'Back substitute: 2^x = 2 ==> x = 1, and 2^x = 4 ==> x = 2. Solutions are x = 1, 2.', revealsFinalAnswer: true }
+        ];
+      }
+
+      return {
+        statement: {
+          promptText,
+          expressionLatex: exprLatex,
+          targetVariable: 'x',
+          independentVariable: 'x'
+        },
+        rawExpression: constant(1),
+        canonicalAnswerLatex: canonicalLatex,
+        canonicalAnswerRaw: canonicalRaw,
+        distractors,
+        reasoningTrace,
+        hints,
+        difficultyVector: { overall: difficulty || 2, conceptual: difficulty, procedural: difficulty, computational: 2, reasoning: difficulty, representation: 2, context: 1, multiStep: difficulty },
+        structureSignature: `GEN0101:EXP_LOG:DIFF${difficulty}_BASE${base}`
       };
     }
   },
