@@ -82,7 +82,10 @@ export const MathContent: React.FC<MathContentProps> = ({
       trimmed.includes('^{') ||
       trimmed.includes('\\text{');
 
+    const isLatexEnvironment = /\\begin\{(?:cases|matrix|pmatrix|bmatrix|vmatrix|Vmatrix|aligned|align|array|split|gather)\}/.test(trimmed);
+
     const isMathFormula =
+      isLatexEnvironment ||
       LibMathNormalizer.isPureMath(trimmed) ||
       (hasLatexSyntax && !LibMathNormalizer.hasProseWords(trimmed));
 

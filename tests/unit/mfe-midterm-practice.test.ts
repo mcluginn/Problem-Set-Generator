@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { ContentGenerator } from '@/engine/content/generator';
 import { curriculumRegistry } from '@/engine/curriculum/registry';
+import { MathNormalizer } from '@/lib/math/mathNormalizer';
+import katex from 'katex';
 
 describe('MFE Midterm (COURSE-GEN0101 Unit 2) Quality and Fallback Integrity', () => {
   const midtermSkills = [
@@ -50,5 +52,16 @@ describe('MFE Midterm (COURSE-GEN0101 Unit 2) Quality and Fallback Integrity', (
     const p = res.problem!;
     expect(p.statement.promptText).toMatch(/domain|composite|inverse|function/i);
     expect(p.solution.canonicalAnswerLatex).toBeDefined();
+  });
+
+  it('recognizes \\begin{cases} system of equations as pure math and renders via KaTeX', () => {
+    const expr = '\\begin{cases} x + y = 5 \\\\ x - y = -1 \\end{cases}';
+    expect(MathNormalizer.hasProseWords(expr)).toBe(false);
+    expect(MathNormalizer.isPureMath(expr)).toBe(true);
+    const norm = MathNormalizer.normalizePureMath(expr);
+    expect(norm).toContain('\\begin{cases}');
+    expect(norm).toContain('\\end{cases}');
+    const html = katex.renderToString(norm, { displayMode: true });
+    expect(html).toContain('katex');
   });
 });

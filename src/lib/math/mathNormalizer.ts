@@ -78,11 +78,12 @@ export class MathNormalizer {
     'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi',
     'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega',
 
-    // Common LaTeX command words
+    // Common LaTeX command words and environments
     'frac', 'cdot', 'times', 'div', 'pm', 'mp', 'le', 'ge', 'ne', 'approx',
     'to', 'infty', 'partial', 'sum', 'prod', 'int', 'iint', 'iiint', 'oint',
     'left', 'right', 'mathbf', 'mathrm', 'mathit', 'text', 'quad', 'qquad',
     'circ', 'dot', 'hat', 'bar', 'vec', 'over', 'prime',
+    'cases', 'matrix', 'pmatrix', 'bmatrix', 'vmatrix', 'Vmatrix', 'aligned', 'array', 'split', 'gather', 'begin', 'end',
 
     // Multi-variable products & single-letter variable combinations
     'xy', 'yx', 'xz', 'zx', 'yz', 'zy', 'ye', 'ey', 'xe', 'ex', 'ze', 'ez',
@@ -133,6 +134,7 @@ export class MathNormalizer {
     // Strip out LaTeX macros with bracketed arguments first (e.g. \text{approach}, \mathrm{obs}, \text{ Hz })
     const stripped = text
       .replace(/\\(?:text|mathrm|mathbf|mathit|operatorname|textnormal|textbf|textit)\{[^}]*\}/g, ' ')
+      .replace(/\\(?:begin|end)\{[a-zA-Z*]+\}/g, ' ')
       .replace(/_[a-zA-Z0-9]+/g, ' ')
       .replace(/_\{[^}]*\}/g, ' ')
       .replace(/\\[a-zA-Z]+/g, ' ')
@@ -762,6 +764,11 @@ export class MathNormalizer {
     // If it contains natural prose words, it is NEVER pure math
     if (MathNormalizer.hasProseWords(trimmed)) {
       return false;
+    }
+
+    // Explicit LaTeX environments are pure math
+    if (/\\begin\{(?:cases|matrix|pmatrix|bmatrix|vmatrix|Vmatrix|aligned|align|array|split|gather)\}/.test(trimmed)) {
+      return true;
     }
 
     // Already delimited
