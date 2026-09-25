@@ -104,13 +104,26 @@ export const PracticeScreen: React.FC<PracticeScreenProps> = ({
 
   const mcqOptions = useMemo(() => {
     if (!problem) return [];
+    const canonicalLatex = problem.solution?.canonicalAnswerLatex?.trim() || '';
+    const canonicalRaw = problem.solution?.canonicalAnswerRaw?.trim() || canonicalLatex;
+
     if (problem.statement?.options && problem.statement.options.length > 0) {
-      return problem.statement.options.map((opt, idx) => ({
-        id: opt.id || String.fromCharCode(65 + idx),
-        label: opt.id || String.fromCharCode(65 + idx),
-        latex: opt.distractorLatex,
-        raw: opt.distractorRaw || opt.distractorLatex,
-      }));
+      return problem.statement.options.map((opt, idx) => {
+        const latex = opt.distractorLatex;
+        const raw = opt.distractorRaw || opt.distractorLatex;
+        const isOptCorrect = (opt as any).isCorrect ?? (
+          latex === canonicalLatex ||
+          raw === canonicalRaw ||
+          latex.replace(/\s+/g, '') === canonicalLatex.replace(/\s+/g, '')
+        );
+        return {
+          id: opt.id || String.fromCharCode(65 + idx),
+          label: opt.id || String.fromCharCode(65 + idx),
+          latex,
+          raw,
+          isCorrect: Boolean(isOptCorrect),
+        };
+      });
     }
     try {
       const generated = DistractorGenerator.generateOptions(problem);
@@ -119,6 +132,7 @@ export const PracticeScreen: React.FC<PracticeScreenProps> = ({
         label: opt.label,
         latex: opt.textLatex,
         raw: opt.textRaw,
+        isCorrect: Boolean(opt.isCorrect),
       }));
     } catch (err) {
       console.warn('Could not generate dynamic distractors:', err);
@@ -133,18 +147,18 @@ export const PracticeScreen: React.FC<PracticeScreenProps> = ({
             return canonical.substring(0, lastM.index!) + nv + canonical.substring(lastM.index! + lastM[0].length);
           };
           return [
-            { id: 'A', label: 'A', latex: canonical, raw: canonical },
-            { id: 'B', label: 'B', latex: makeCand(0.85), raw: makeCand(0.85) },
-            { id: 'C', label: 'C', latex: makeCand(1.15), raw: makeCand(1.15) },
-            { id: 'D', label: 'D', latex: makeCand(0.50), raw: makeCand(0.50) },
+            { id: 'A', label: 'A', latex: canonical, raw: canonical, isCorrect: true },
+            { id: 'B', label: 'B', latex: makeCand(0.85), raw: makeCand(0.85), isCorrect: false },
+            { id: 'C', label: 'C', latex: makeCand(1.15), raw: makeCand(1.15), isCorrect: false },
+            { id: 'D', label: 'D', latex: makeCand(0.50), raw: makeCand(0.50), isCorrect: false },
           ];
         }
       }
       return [
-        { id: 'A', label: 'A', latex: canonical, raw: canonical },
-        { id: 'B', label: 'B', latex: `${canonical} + 1`, raw: `${canonical} + 1` },
-        { id: 'C', label: 'C', latex: `-${canonical}`, raw: `-${canonical}` },
-        { id: 'D', label: 'D', latex: `2(${canonical})`, raw: `2(${canonical})` },
+        { id: 'A', label: 'A', latex: canonical, raw: canonical, isCorrect: true },
+        { id: 'B', label: 'B', latex: `${canonical} + 1`, raw: `${canonical} + 1`, isCorrect: false },
+        { id: 'C', label: 'C', latex: `-${canonical}`, raw: `-${canonical}`, isCorrect: false },
+        { id: 'D', label: 'D', latex: `2(${canonical})`, raw: `2(${canonical})`, isCorrect: false },
       ];
     }
   }, [problem]);
@@ -807,37 +821,66 @@ export const PracticeScreen: React.FC<PracticeScreenProps> = ({
                 <div className="grid grid-cols-1 gap-2.5">
                   {mcqOptions.map((opt) => {
                     const isSelected = studentAnswer === opt.latex;
+                    const isEvaluated = isCorrect !== null;
+                    const isWrongSelection = isEvaluated && isCorrect === false && isSelected;
+                    const isCorrectSelection = isEvaluated && isCorrect === true && isSelected;
+                    const isRevealedCorrect = isEvaluated && isCorrect === false && Boolean(opt.isCorrect);
+
+                    let containerClasses = 'bg-[#06162f]/80 border-[#2c4f75]/30 text-slate-300 hover:bg-[#102d52]/40 hover:border-[#2c4f75]/60 hover:text-white';
+                    let badgeClasses = 'bg-[#102d52] text-slate-300 border border-[#2c4f75]/40';
+
+                    if (isWrongSelection) {
+                      containerClasses = 'bg-rose-950/70 border-rose-500 text-rose-100 ring-2 ring-rose-500/60 shadow-lg shadow-rose-950/50';
+                      badgeClasses = 'bg-rose-600 text-white font-bold';
+                    } else if (isCorrectSelection) {
+                      containerClasses = 'bg-emerald-950/70 border-emerald-500 text-emerald-100 ring-2 ring-emerald-500/60 shadow-lg shadow-emerald-950/50';
+                      badgeClasses = 'bg-emerald-500 text-[#061b3a] font-bold';
+                    } else if (isRevealedCorrect) {
+                      containerClasses = 'bg-emerald-950/30 border-emerald-500/80 text-emerald-200 ring-1 ring-emerald-500/40';
+                      badgeClasses = 'bg-emerald-700 text-white font-bold';
+                    } else if (isSelected) {
+                      containerClasses = 'bg-[#102d52] border-brass-500 text-white shadow-md shadow-brass-500/15 ring-1 ring-brass-500/50';
+                      badgeClasses = 'bg-brass-500 text-[#061b3a] font-bold';
+                    }
+
                     return (
                       <button
                         key={opt.id}
                         type="button"
-                        disabled={isCorrect === true}
+                        disabled={isCorrect === true || isSubmitting}
                         onClick={() => {
                           setStudentAnswer(opt.latex);
-                          if (isCorrect !== null) {
-                            setIsCorrect(null);
-                            setDiagnosis(null);
-                          }
+                          handleSubmitAnswer(opt.latex);
                         }}
-                        className={`w-full p-4 rounded-lg border text-left transition flex items-center space-x-3.5 min-h-[52px] ${
-                          isSelected
-                            ? 'bg-[#102d52] border-brass-500 text-white shadow-md shadow-brass-500/15 ring-1 ring-brass-500/50'
-                            : 'bg-[#06162f]/80 border-[#2c4f75]/30 text-slate-300 hover:bg-[#102d52]/40 hover:border-[#2c4f75]/60 hover:text-white'
-                        }`}
+                        className={`w-full p-4 rounded-lg border text-left transition flex items-center space-x-3.5 min-h-[52px] ${containerClasses}`}
                       >
                         <div
-                          className={`w-8 h-8 rounded-md font-mono font-bold text-xs flex items-center justify-center shrink-0 ${
-                            isSelected
-                              ? 'bg-brass-500 text-[#061b3a]'
-                              : 'bg-[#102d52] text-slate-300 border border-[#2c4f75]/40'
-                          }`}
+                          className={`w-8 h-8 rounded-md font-mono font-bold text-xs flex items-center justify-center shrink-0 ${badgeClasses}`}
                         >
                           {opt.label}
                         </div>
                         <div className="flex-1 overflow-x-auto font-medium text-sm">
                           <MathContent content={opt.latex} />
                         </div>
-                        {isSelected && (
+                        {isWrongSelection && (
+                          <div className="flex items-center space-x-2 shrink-0">
+                            <span className="text-xs font-mono font-bold text-rose-400 uppercase tracking-wide">Incorrect</span>
+                            <XCircle className="w-5 h-5 text-rose-400" />
+                          </div>
+                        )}
+                        {isCorrectSelection && (
+                          <div className="flex items-center space-x-2 shrink-0">
+                            <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wide">Correct</span>
+                            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                          </div>
+                        )}
+                        {isRevealedCorrect && !isSelected && (
+                          <div className="flex items-center space-x-2 shrink-0">
+                            <span className="text-xs font-mono font-semibold text-emerald-400">Correct Answer</span>
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          </div>
+                        )}
+                        {!isEvaluated && isSelected && (
                           <CheckCircle2 className="w-5 h-5 text-brass-400 shrink-0" />
                         )}
                       </button>

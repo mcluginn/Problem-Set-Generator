@@ -128,8 +128,8 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
     familyId: family.id,
     courseId: skill.parentCourseId,
     primarySkillId: skill.id,
-    name: `${skill.canonicalName} representative calculation`,
-    description: `A varied, low-friction representative item for ${skill.canonicalName}.`,
+    name: `${skill.canonicalName} exercise`,
+    description: `A varied, authentic practice item for ${skill.canonicalName}.`,
     parameterSchema: [
       { name: 'variant', type: 'CHOICE', choices: [0, 1, 2, 3, 4, 5], description: 'Structural variation selector' },
       { name: 'a', type: 'INTEGER', min: 2, max: 9, description: 'Primary positive value' },
@@ -150,6 +150,18 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
       let independentVariable = 'x';
 
       switch (skill.id) {
+        case 'SKILL-GEN0101-001': {
+          const v1 = 2 + (variant % 3);
+          const v2 = 3 + (a % 4);
+          const v3 = 1 + (b % 3);
+          const v4 = 2 + (c % 3);
+          const result = v1 * v2 + v3 * v4;
+          answer = result;
+          expressionLatex = `${v1} \\times ${v2} + ${v3} \\times ${v4}`;
+          promptText = `Evaluate the arithmetic expression ${expressionLatex} using the standard order of operations.`;
+          method = 'order of operations';
+          break;
+        }
         case 'SKILL-GEN0101-002': {
           const common = 2 + (variant % 3);
           const left = common * (3 + (a % 3));
@@ -168,6 +180,18 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
           method = 'common denominators and fraction simplification';
           break;
         }
+        case 'SKILL-GEN0101-004': {
+          const k = 2 + (variant % 4);
+          const x1 = 3 + (a % 4);
+          const y1 = k * x1;
+          const x2 = 5 + (b % 4);
+          const y2 = k * x2;
+          answer = y2;
+          expressionLatex = `y = kx`;
+          promptText = `Given that y varies directly with x, and y = ${y1} when x = ${x1}, find the value of y when x = ${x2}.`;
+          method = 'direct variation modeling';
+          break;
+        }
         case 'SKILL-GEN0101-005': {
           const p = 2 + (variant % 4);
           const q = 3 + (a % 4);
@@ -175,6 +199,16 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
           expressionLatex = `x^2+${p + q}x+${p * q}`;
           promptText = `For ${expressionLatex}=0, factor the polynomial and report the product of its two roots.`;
           method = 'polynomial factoring';
+          break;
+        }
+        case 'SKILL-GEN0101-006': {
+          const m = 2 + (variant % 3);
+          const n = 3 + (a % 3);
+          const base = 2;
+          answer = m + n;
+          expressionLatex = `2^{${m}} \\cdot 2^{${n}} = 2^{k}`;
+          promptText = `Using exponent laws, find the exponent k such that ${expressionLatex}.`;
+          method = 'exponent product rule';
           break;
         }
         case 'SKILL-GEN0101-007': {
@@ -187,14 +221,88 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
           physicalUnits = 'hours';
           break;
         }
+        case 'SKILL-GEN0101-008': {
+          // Quadratic Equations: find positive root of (x - r1)(x + r2) = 0
+          const r1 = 2 + (a % 5);
+          const r2 = 3 + (b % 4);
+          const bCoeff = r2 - r1;
+          const cCoeff = r1 * r2;
+          const signStr = bCoeff >= 0 ? `+ ${bCoeff}` : `- ${Math.abs(bCoeff)}`;
+          expressionLatex = bCoeff === 0 ? `x^2 - ${cCoeff} = 0` : `x^2 ${signStr}x - ${cCoeff} = 0`;
+          promptText = `Find the positive root of the quadratic equation ${expressionLatex}.`;
+          answer = r1;
+          method = 'quadratic factoring and formula';
+          break;
+        }
+        case 'SKILL-GEN0101-009': {
+          // Systems of Equations: x + y = sum, x - y = diff
+          const xVal = 4 + (a % 5);
+          const yVal = 2 + (b % 4);
+          const sum = xVal + yVal;
+          const diff = xVal - yVal;
+          expressionLatex = `\\begin{cases} x + y = ${sum} \\\\ x - y = ${diff} \\end{cases}`;
+          promptText = `Solve the system of linear equations for x: ${expressionLatex}.`;
+          answer = xVal;
+          method = 'elimination method';
+          break;
+        }
+        case 'SKILL-GEN0101-010': {
+          // Functions: Domain, Range, Composition, and Inverses
+          const mode = variant % 4;
+          if (mode === 0) {
+            const root = 2 + (a % 7);
+            const num = 1 + (b % 5);
+            expressionLatex = `f(x) = \\frac{${num}}{x - ${root}}`;
+            promptText = `Determine the value of x excluded from the natural domain of ${expressionLatex}.`;
+            answer = root;
+            method = 'natural domain rational restriction';
+          } else if (mode === 1) {
+            const m = 2 + (a % 3);
+            const k = 1 + (b % 4);
+            const x0 = 1 + (c % 3);
+            const gVal = x0 + 2;
+            const fgVal = m * gVal + k;
+            expressionLatex = `f(x) = ${m}x + ${k}, \\quad g(x) = x + 2`;
+            promptText = `Given ${expressionLatex}, evaluate the composite function (f \\circ g)(${x0}).`;
+            answer = fgVal;
+            method = 'function composition';
+          } else if (mode === 2) {
+            const m = 2 + (a % 3);
+            const k = 1 + (b % 4);
+            const x0 = 2 + (variant % 4);
+            const y0 = m * x0 - k;
+            expressionLatex = `f(x) = ${m}x - ${k}`;
+            promptText = `For the function ${expressionLatex}, determine the inverse value f^{-1}(${y0}).`;
+            answer = x0;
+            method = 'inverse function calculation';
+          } else {
+            const k = 2 + (b % 6);
+            expressionLatex = `f(x) = \\sqrt{x - ${k}}`;
+            promptText = `Find the minimum real value of x in the natural domain of ${expressionLatex}.`;
+            answer = k;
+            method = 'radical function natural domain';
+          }
+          break;
+        }
         case 'SKILL-GEN0101-011': {
-          const base = 2 + (variant % 2);
-          const exponent = 2 + (a % 3);
-          const value = base ** exponent;
-          answer = exponent;
-          expressionLatex = `${base}^{x}=${value}`;
-          promptText = `Solve the exponential equation ${expressionLatex} for x.`;
-          method = 'exponential and logarithmic laws';
+          const mode = variant % 2;
+          if (mode === 0) {
+            const base = 2 + (variant % 2);
+            const exponent = 2 + (a % 3);
+            const value = base ** exponent;
+            answer = exponent;
+            expressionLatex = `${base}^{x} = ${value}`;
+            promptText = `Solve the exponential equation ${expressionLatex} for x.`;
+            method = 'exponential equation laws';
+          } else {
+            const base = 2 + (variant % 3);
+            const ansVal = 2 + (b % 3);
+            const arg = base ** ansVal;
+            answer = arg;
+            expressionLatex = `\\log_{${base}}(x) = ${ansVal}`;
+            promptText = `Solve the logarithmic equation ${expressionLatex} for x.`;
+            method = 'logarithmic definitions and properties';
+          }
           break;
         }
         case 'SKILL-GEN0101-012':
@@ -369,11 +477,15 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
             targetVariable = 'y';
             independentVariable = 'x';
           } else {
-            const result = a + b + c + variant;
-            answer = result;
-            expressionLatex = `A+B+C=${result}`;
-            promptText = `Complete a representative calculation for the skill “${skill.canonicalName}”: add ${a}, ${b}, and ${c}.`;
-            method = 'direct calculation';
+            const k = 2 + (variant % 3);
+            const coeff = 1 + (a % 3);
+            const constVal = 2 + (b % 5);
+            const xVal = 1 + (c % 4);
+            const evalResult = coeff * (xVal ** 2) + k * xVal + constVal;
+            answer = evalResult;
+            expressionLatex = `f(x) = ${coeff > 1 ? coeff : ''}x^2 + ${k}x + ${constVal}`;
+            promptText = `Evaluate the function ${expressionLatex} at x = ${xVal}.`;
+            method = 'algebraic function evaluation';
           }
         }
       }
