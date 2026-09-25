@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { ContentGenerator } from '@/engine/content/generator';
 import { curriculumRegistry } from '@/engine/curriculum/registry';
 import { MathNormalizer } from '@/lib/math/mathNormalizer';
+import { MathNormalizer as ComponentMathNormalizer } from '@/components/math/normalizer';
+import { isPureMathExpression } from '@/components/math/MathRenderer';
 import katex from 'katex';
 
 describe('MFE Midterm (COURSE-GEN0101 Unit 2) Quality and Fallback Integrity', () => {
@@ -63,5 +65,42 @@ describe('MFE Midterm (COURSE-GEN0101 Unit 2) Quality and Fallback Integrity', (
     expect(norm).toContain('\\end{cases}');
     const html = katex.renderToString(norm, { displayMode: true });
     expect(html).toContain('katex');
+  });
+
+  it('renders Level 4 linear systems expression with KaTeX without error', () => {
+    const res = ContentGenerator.generateForSkill({
+      courseId: 'COURSE-GEN0101',
+      skillId: 'SKILL-GEN0101-009',
+      difficulty: 4,
+    });
+    expect(res.success).toBe(true);
+    const p = res.problem!;
+    const expr = p.statement.expressionLatex;
+    console.log('Level 4 expressionLatex:', JSON.stringify(expr));
+    expect(MathNormalizer.isPureMath(expr)).toBe(true);
+    const norm = MathNormalizer.normalizePureMath(expr);
+    console.log('Level 4 normalized:', JSON.stringify(norm));
+    const html = katex.renderToString(norm, { displayMode: true, throwOnError: false });
+    expect(html).not.toContain('katex-error');
+  });
+
+  it('normalizes and parses LaTeX environments in ComponentMathNormalizer and MathRenderer', () => {
+    const expr = '\\begin{cases} 3x + 5y = 14 \\\\ 4x - 3y = 9 \\end{cases}';
+    
+    // Check MathRenderer pure math detection
+    expect(isPureMathExpression(expr, false)).toBe(true);
+    expect(isPureMathExpression(expr, true)).toBe(true);
+
+    // Check ComponentMathNormalizer inline segments
+    const inlineSegs = ComponentMathNormalizer.parseInlineSegments(`Solve system: ${expr}`);
+    const mathSeg = inlineSegs.find((s) => s.type === 'inline_math');
+    expect(mathSeg).toBeDefined();
+    expect(mathSeg?.latex).toContain('\\begin{cases}');
+
+    // Check ComponentMathNormalizer block parser
+    const blocks = ComponentMathNormalizer.parseContentBlocks(expr);
+    expect(blocks.length).toBeGreaterThan(0);
+    expect(blocks[0].type).toBe('display_math');
+    expect(blocks[0].latex).toContain('\\begin{cases}');
   });
 });

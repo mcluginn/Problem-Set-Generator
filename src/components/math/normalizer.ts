@@ -44,7 +44,7 @@ export class MathNormalizer {
     // 6. * ... * (italic)
     // 7. ` ... ` (code)
     const tokenRegex =
-      /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\$[^\$\n]+?\$|\\\([\s\S]*?\\\)|(?<!\*)\*\*(?!\*)([^\*]+?)(?<!\*)\*\*(?!\*)|(?<!\*)\*(?!\*)([^\*]+?)(?<!\*)\*(?!\*)|`([^`]+?)`)/g;
+      /(\\begin\{(?:cases|matrix|pmatrix|bmatrix|vmatrix|Vmatrix|aligned|align|array|split|gather)\}[\s\S]*?\\end\{(?:cases|matrix|pmatrix|bmatrix|vmatrix|Vmatrix|aligned|align|array|split|gather)\}|\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\$[^\$\n]+?\$|\\\([\s\S]*?\\\)|(?<!\*)\*\*(?!\*)([^\*]+?)(?<!\*)\*\*(?!\*)|(?<!\*)\*(?!\*)([^\*]+?)(?<!\*)\*(?!\*)|`([^`]+?)`)/g;
 
     const segments: InlineSegment[] = [];
     let lastIndex = 0;
@@ -60,7 +60,9 @@ export class MathNormalizer {
         segments.push({ type: 'text', text: text.substring(lastIndex, matchStart) });
       }
 
-      if (fullMatch.startsWith('$$') && fullMatch.endsWith('$$')) {
+      if (fullMatch.startsWith('\\begin{')) {
+        segments.push({ type: 'inline_math', latex: fullMatch.trim() });
+      } else if (fullMatch.startsWith('$$') && fullMatch.endsWith('$$')) {
         segments.push({ type: 'inline_math', latex: fullMatch.slice(2, -2).trim() });
       } else if (fullMatch.startsWith('\\[') && fullMatch.endsWith('\\]')) {
         segments.push({ type: 'inline_math', latex: fullMatch.slice(2, -2).trim() });
@@ -121,11 +123,14 @@ export class MathNormalizer {
       if (inDisplayMath) {
         if (
           (displayMathDelimiter === '$$' && line.endsWith('$$')) ||
-          (displayMathDelimiter === '\\[' && line.endsWith('\\]'))
+          (displayMathDelimiter === '\\[' && line.endsWith('\\]')) ||
+          (displayMathDelimiter.startsWith('\\end{') && line.includes(displayMathDelimiter))
         ) {
           inDisplayMath = false;
-          const closingLen = 2;
-          const lineContent = line.slice(0, -closingLen).trim();
+          let lineContent = line;
+          if (displayMathDelimiter === '$$' || displayMathDelimiter === '\\[') {
+            lineContent = line.slice(0, -2).trim();
+          }
           if (lineContent) displayMathBuffer.push(lineContent);
           blocks.push({
             type: 'display_math',
@@ -137,6 +142,23 @@ export class MathNormalizer {
           displayMathBuffer.push(lines[i]);
         }
         continue;
+      }
+
+      // Explicit LaTeX environments: \begin{cases}...\end{cases}, \begin{matrix}, etc.
+      const envBeginMatch = line.match(/^\\begin\{(cases|matrix|pmatrix|bmatrix|vmatrix|Vmatrix|aligned|align|array|split|gather)\}/);
+      if (envBeginMatch) {
+        flushParagraph();
+        const envName = envBeginMatch[1];
+        const endPattern = `\\end{${envName}}`;
+        if (line.includes(endPattern)) {
+          blocks.push({ type: 'display_math', latex: line });
+          continue;
+        } else {
+          inDisplayMath = true;
+          displayMathDelimiter = endPattern;
+          displayMathBuffer = [lines[i]];
+          continue;
+        }
       }
 
       // Single-line display math: $$ ... $$ or \[ ... \]

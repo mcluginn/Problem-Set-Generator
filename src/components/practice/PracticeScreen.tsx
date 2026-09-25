@@ -763,7 +763,7 @@ export const PracticeScreen: React.FC<PracticeScreenProps> = ({
             {problem.statement.expressionLatex &&
               !problem.statement.promptText.includes(problem.statement.expressionLatex) && (
                 <div className="bg-[#06162f]/90 border border-[#2c4f75]/35 rounded-lg p-5 text-center overflow-x-auto">
-                  <MathContent content={problem.statement.expressionLatex} displayMode={true} />
+                  <MathRenderer latex={problem.statement.expressionLatex} displayMode={true} />
                 </div>
               )}
 

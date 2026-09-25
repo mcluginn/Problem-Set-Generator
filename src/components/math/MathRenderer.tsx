@@ -22,6 +22,9 @@ export function isPureMathExpression(latex: string, displayMode = false): boolea
   // If text contains natural prose words, it is NEVER a pure math expression
   if (LibMathNormalizer.hasProseWords(trimmed)) return false;
 
+  const isLatexEnv = /\\begin\{(?:cases|matrix|pmatrix|bmatrix|vmatrix|Vmatrix|aligned|align|array|split|gather)\}/.test(trimmed);
+  if (isLatexEnv) return true;
+
   if (displayMode) return true;
   if (LibMathNormalizer.isPureMath(trimmed)) return true;
 
@@ -106,6 +109,8 @@ export const MathRenderer: React.FC<MathRendererProps> = ({
       const displayMatch = remaining.match(/^([\s\S]*?)\$\$([\s\S]+?)\$\$([\s\S]*)$/);
       // Look for display math \[...\]
       const bracketMatch = remaining.match(/^([\s\S]*?)\\\[([\s\S]+?)\\\]([\s\S]*)$/);
+      // Look for explicit LaTeX environment: \begin{cases}...\end{cases}, etc.
+      const envMatch = remaining.match(/^([\s\S]*?)(\\begin\{(?:cases|matrix|pmatrix|bmatrix|vmatrix|Vmatrix|aligned|align|array|split|gather)\}[\s\S]*?\\end\{(?:cases|matrix|pmatrix|bmatrix|vmatrix|Vmatrix|aligned|align|array|split|gather)\})([\s\S]*)$/);
       // Look for inline math \(...\)
       const parenMatch = remaining.match(/^([\s\S]*?)\\\(([\s\S]+?)\\\)([\s\S]*)$/);
       // Look for inline math $...$
@@ -127,6 +132,9 @@ export const MathRenderer: React.FC<MathRendererProps> = ({
       }
       if (bracketMatch && bracketMatch.index !== undefined) {
         candidates.push({ type: 'display', pre: bracketMatch[1], math: bracketMatch[2], post: bracketMatch[3], index: bracketMatch[1].length });
+      }
+      if (envMatch && envMatch.index !== undefined) {
+        candidates.push({ type: 'display', pre: envMatch[1], math: envMatch[2], post: envMatch[3], index: envMatch[1].length });
       }
       if (parenMatch && parenMatch.index !== undefined) {
         candidates.push({ type: 'inline', pre: parenMatch[1], math: parenMatch[2], post: parenMatch[3], index: parenMatch[1].length });

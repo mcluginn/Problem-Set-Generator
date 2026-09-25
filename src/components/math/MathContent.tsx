@@ -102,7 +102,7 @@ export const MathContent: React.FC<MathContentProps> = ({
         if (displayMode) {
           return (
             <div
-              className={`math-content-display my-3 py-2.5 px-4 bg-slate-950/70 border border-slate-800/70 rounded-xl text-center overflow-x-auto shadow-inner text-slate-100 ${className}`}
+              className={`math-content-display my-2 text-center overflow-x-auto text-slate-100 ${className}`}
             >
               <span dangerouslySetInnerHTML={{ __html: html }} />
             </div>

@@ -241,7 +241,7 @@ export function createFallbackTemplate(skill: LearningSkill, family: ProblemFami
           const sum = xVal + yVal;
           const diff = xVal - yVal;
           expressionLatex = `\\begin{cases} x + y = ${sum} \\\\ x - y = ${diff} \\end{cases}`;
-          promptText = `Solve the system of linear equations for x: ${expressionLatex}.`;
+          promptText = `Solve the system of linear equations for x:`;
           answer = xVal;
           method = 'elimination method';
           break;
